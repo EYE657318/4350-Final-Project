@@ -1,0 +1,138 @@
+#include <vector>
+#pragma once
+//////////////////////////////////////////
+////////////// ENUMS /////////////////////
+//////////////////////////////////////////
+
+//Enum: Offensive skills the gladiators can have
+//Add more as needed
+enum OffSkill{
+	Attack,          //A normal attack
+	Pierce,          //An attack that ignores some defense
+	Net,             //An attack that reduces the target's movement
+};
+
+//Enum: Support skills the gladiators can have
+//Add more as needed
+enum SupSkill{
+	Heal,            //Heals ally
+	Inspire,         //Boosts ally's attack
+	Resolve,         //Boosts ally's defense
+	Train,           //PERMANENTLY boosts ally's attack
+};
+
+//Enum: gladiator AI
+//Add more as needed
+enum AI {
+	Offense,          //Attacks whenever possible
+	Support,          //Supports whenever possible
+	Indecisive,       //Picks at random
+};
+
+//Enum: personality has no gameplay effect; it just determines dialogue
+//Add more as needed
+enum Personality {
+	Warrior,
+	Fearful,
+	Excited,
+	Quiet,
+};
+
+///////////////////////////////////////////
+///////////// GLADIATOR CLASS /////////////
+///////////////////////////////////////////
+class Gladiator {
+	public:
+
+		///////////////////////////////
+		////////  IMPORTANT  //////////
+		///////////////////////////////
+		Gladiator(int team);                                                    //Constructor (random values)
+		Gladiator(int hp, int atk, int def, int sup, int acc, int ev, int team);  //Constructor (specific values)
+		
+		//~Gladiator(){}
+
+		///////////////////////////////
+		/////////// STATS /////////////
+		///////////////////////////////
+		//cur is what is used in combat
+		//base is what it's set to after combat
+		//(temporary stat modifiers influence cur)
+		
+		//How much damage until KO
+		int maxHP;
+		int curHP;
+
+		//Damage dealt
+		int baseAtk;
+		int curAtk;
+
+		//Damage resisted
+		int baseDef;
+		int curDef;
+
+		//Power of support skills
+		int baseSup;
+		int curSup;
+
+		//Accuracy of attacks
+		int baseAcc;
+		int curAcc;
+
+		//Chance of evading attacks
+		int baseEv;
+		int curEv;
+
+		/////////////////////////////////
+		///////////// SKILLS ////////////
+		/////////////////////////////////
+
+		//The gladiator's two offensive skills
+		OffSkill off1;
+		OffSkill off2;
+
+		//The gladiator's two support skills
+		SupSkill sup1;
+		SupSkill sup2;
+
+		/////////////////////////////////
+		//////// INFLUENCES /////////////
+		/////////////////////////////////
+
+		int favor; //How much Augustus likes the gladiator
+		int fame;  //How much the crowd likes the gladiator
+		//Note: both range from 0 - 100; at 0, they always vote for this gladiator to die. at 100, they never do.
+		//Both must vote for death for the gladiator to be executed
+
+		int team;  //Whose team are they on? 0 = player, 1 = enemy;
+
+		bool active = true;  //When the unit has already taken a turn, this becomes false
+
+		/////////////////////////////////
+		/////////// COSMETIC ////////////
+		/////////////////////////////////
+
+		std::string portrait; //The path to the gladiator's character icon
+		std::string firstname; //The character's first name
+		std::string lastname;  //The character's last name
+		Personality personality; //The character's personality
+
+
+		/////////////////////////////////
+		/////////// OTHER ///////////////
+		/////////////////////////////////
+
+		AI ai;     //How the gladiator acts in combat
+
+		/////////////////////////////////
+		/////////// FUNCTIONS ///////////
+		/////////////////////////////////
+
+
+
+
+};
+
+
+
+
