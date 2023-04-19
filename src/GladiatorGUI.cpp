@@ -43,7 +43,8 @@ void GladiatorGUI::drawImGui_for_this_frame()
 
     ImGui::Begin("GLADIATOR INFORMATION");
 
-    //Put portrait here
+
+    //TODO: image stuff ImGui::Image();
     ImGui::Text("%s %s", gladiator->firstname.c_str(), gladiator->lastname.c_str());
     //Personality is hidden information
     //AI is hidden information           //TODO: since this is strategically relevant, consider changing this

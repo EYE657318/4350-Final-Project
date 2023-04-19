@@ -45,10 +45,16 @@ public:
    Gladiator* board[7][7];
    //the board (physical representation)
    WO* p_board[7][7];
+   //the pieces (physical representation)
+   WO* pieces[7][7];
 
 protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );
    virtual void onCreate();   
+
+   void downtimePhase();
+   bool combatPhase();
+   void phaseHandler();
 };
 
 /** \} */

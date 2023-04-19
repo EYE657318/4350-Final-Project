@@ -70,6 +70,41 @@ std::string dub(std::vector<std::string> nameList) {
     return theName;
 }
 
+/////////////////////////////////////////////////////////////////
+/////////////////// COMBAT STUFF ////////////////////////////////
+/////////////////////////////////////////////////////////////////
+
+bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is whether or not the player lost the fight (true means they lost)
+    //TODO: all of this
+    
+    return false;
+}
+
+void GLViewAAAFinalProject::downtimePhase() {
+    //TODO: all of this
+}
+
+void GLViewAAAFinalProject::phaseHandler() {
+
+    int rounds = 0;         //Currently I plan for there to be 10, but this can change
+    bool lost = false;      //If the player has lost
+
+    while (rounds < 10) {
+
+        this->downtimePhase();      //Run through the downtime phase
+        lost = this->combatPhase(); //Run through the combat phase
+        if (lost) {break;} else {rounds++;} 
+    }
+
+    if (lost) {
+        //TODO: you lost!
+    }
+    else {
+        //TODO: you won!
+    }
+
+}
+
 
 GLViewAAAFinalProject::GLViewAAAFinalProject( const std::vector< std::string >& args ) : GLView( args )
 {
@@ -366,6 +401,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        newglad.firstname = dub(nameList);
        newglad.lastname = dub(nameList);
        allies.push_back(newglad);
+       //TODO: also make the pieces
    }
 
    for (int i = 0; i < 5; i++) {
@@ -377,6 +413,16 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    GladiatorGUI* test = GladiatorGUI::New(nullptr, testGlad, 5.0f, 5.0f);
    test->gladiator = testGlad;
    this->worldLst->push_back(test);
+
+   for (int i = 0; i < 7; i++) {
+       for (int j = 0; j < 7; j++) {
+           WO* wo = WO::New(shinyRedPlasticCube, Vector(1, 1, 1), MESH_SHADING_TYPE::mstFLAT);
+           wo->setPosition(4*i, 4*j, 0);
+           p_board[i][j] = wo;
+           this->worldLst->push_back(wo);
+       }
+   }
+
 
 
    createAAAFinalProjectWayPoints();

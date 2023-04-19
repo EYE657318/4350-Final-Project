@@ -125,6 +125,9 @@ class Gladiator {
 
 		AI ai;     //How the gladiator acts in combat
 
+		int xpos;  //The gladiator's x and y positions on the board
+		int ypos;
+
 		/////////////////////////////////
 		/////////// FUNCTIONS ///////////
 		/////////////////////////////////
