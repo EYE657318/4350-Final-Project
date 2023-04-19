@@ -35,6 +35,7 @@
 #include "AftrGLRendererBase.h"
 
 #include "Gladiator.h"
+#include "GladiatorGUI.h"
 
 using namespace Aftr;
 
@@ -44,6 +45,29 @@ GLViewAAAFinalProject* GLViewAAAFinalProject::New( const std::vector< std::strin
    glv->init( Aftr::GRAVITY, Vector( 0, 0, -1.0f ), "aftr.conf", PHYSICS_ENGINE_TYPE::petODE );
    glv->onCreate();
    return glv;
+}
+
+////////////////////////////////////////////////////////////////////
+//////////////////// GLADIATOR FUNCTIONS ///////////////////////////
+////////////////////////////////////////////////////////////////////
+// 
+///////////////////////////////////////////////////////////////
+//////////////////// NAME STUFF ///////////////////////////////
+///////////////////////////////////////////////////////////////
+//This is the list of names used to generate gladiator names.
+//It makes no distinction between first and last names. 
+//This is to emphasize the strangeness of this world.
+std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios", "Aegyptus", "Aemilius", "Africana", "Africanus",
+"Ajax", "Albanus", "Alexander", "Amandus", "Amethystus", "Amianthus", "Amor", "Ampliatus", "Anicetus", "Andromeda",
+"Apelles", "Antonius", "Apollodoru" };
+
+//Picks a name from the provided list
+std::string dub(std::vector<std::string> nameList) {
+    //srand(time(NULL));
+    int vecsize = nameList.size();
+    int index = rand() % vecsize;
+    std::string theName = nameList[index];
+    return theName;
 }
 
 
@@ -317,56 +341,54 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    //Make a Dear Im Gui instance via the WOImGui in the engine... This calls
    //the default Dear ImGui demo that shows all the features... To create your own,
    //inherit from WOImGui and override WOImGui::drawImGui_for_this_frame(...) (among any others you need).
-   WOImGui* gui = WOImGui::New( nullptr );
-   gui->setLabel( "My Gui" );
-   gui->subscribe_drawImGuiWidget(
-      [this, gui]() //this is a lambda, the capture clause is in [], the input argument list is in (), and the body is in {}
-      {
-         ImGui::ShowDemoWindow(); //Displays the default ImGui demo from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
-         WOImGui::draw_AftrImGui_Demo( gui ); //Displays a small Aftr Demo from C:/repos/aburn/engine/src/aftr/WOImGui.cpp
-         ImPlot::ShowDemoWindow(); //Displays the ImPlot demo using ImGui from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
-      } );
-   this->worldLst->push_back( gui );
+   // 
+   // TODO: look closer at this, because apparently I'm gonna need to figure out subscribe_drawImGuiWidget
+   // 
+   //WOImGui* gui = WOImGui::New( nullptr );
+   //gui->setLabel( "My Gui" );
+   //gui->subscribe_drawImGuiWidget(
+   //   [this, gui]() //this is a lambda, the capture clause is in [], the input argument list is in (), and the body is in {}
+   //   {
+   //      ImGui::ShowDemoWindow(); //Displays the default ImGui demo from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
+   //      WOImGui::draw_AftrImGui_Demo( gui ); //Displays a small Aftr Demo from C:/repos/aburn/engine/src/aftr/WOImGui.cpp
+   //      ImPlot::ShowDemoWindow(); //Displays the ImPlot demo using ImGui from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
+   //   } );
+   //this->worldLst->push_back( gui );
 
    ////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////     MY STUFF    ///////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////
    
+   srand(time(NULL));
+
+   for (int i = 0; i < 5; i++) {
+       Gladiator newglad = Gladiator(1);
+       newglad.firstname = dub(nameList);
+       newglad.lastname = dub(nameList);
+       allies.push_back(newglad);
+   }
+
+   for (int i = 0; i < 5; i++) {
+       std::cout << "The " << i << "th ally gladiator is named " << allies[i].firstname << " " << allies[i].lastname << "." << std::endl;
+   }
+
+   Gladiator* testGlad = &allies[0];
+
+   GladiatorGUI* test = GladiatorGUI::New(nullptr, testGlad, 5.0f, 5.0f);
+   test->gladiator = testGlad;
+   this->worldLst->push_back(test);
 
 
    createAAAFinalProjectWayPoints();
 }
 
 //TODO list:
-//1. more randomization in gladiators
-//2. actually generate them with the array at startup
-//3. GUI for displaying gladiators
-//4. Manipulating stats of gladiators
-//5. Game board
-//6. Combat
-//7. Shop
+//1. GUI for displaying gladiators
+//2. Manipulating stats of gladiators
+//3. Game board
+//4. Combat
+//5. Shop
 
-
-
-
-
-///////////////////////////////////////////////////////////////
-//////////////////// NAME STUFF ///////////////////////////////
-///////////////////////////////////////////////////////////////
-//This is the list of names used to generate gladiator names.
-//It makes no distinction between first and last names. 
-//This is to emphasize the strangeness of this world.
-std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios", "Aegyptus", "Aemilius", "Africana", "Africanus",
-"Ajax", "Albanus", "Alexander", "Amandus", "Amethystus", "Amianthus", "Amor", "Ampliatus", "Anicetus", "Andromeda",
-"Apelles", "Antonius", "Apollodoru" };
-
-//Picks a name from the provided list
-std::string dub(std::vector<std::string> nameList) {
-    int vecsize = nameList.size();
-    int index = rand() % vecsize;
-    std::string theName = nameList[index];
-    return theName;
-}
 
 
 

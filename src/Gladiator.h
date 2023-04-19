@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 #pragma once
 //////////////////////////////////////////
 ////////////// ENUMS /////////////////////
@@ -128,7 +129,17 @@ class Gladiator {
 		/////////// FUNCTIONS ///////////
 		/////////////////////////////////
 
+		/////////////////////////////////
+		////////// DIALOGUE /////////////
+		/////////////////////////////////
 
+		std::string D_IncreaseHP();
+		std::string D_IncreaseAtk();
+		std::string D_IncreaseDef();
+		std::string D_IncreaseSup();
+		std::string D_IncreaseAcc();
+		std::string D_IncreaseEv();
+		std::string D_IncreaseFail();
 
 
 };
