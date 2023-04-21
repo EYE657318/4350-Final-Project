@@ -1,4 +1,6 @@
 #include "Gladiator.h"
+#include "WOImGui.h" //GUI Demos also need to #include "AftrImGuiIncludes.h"
+#include "AftrImGuiIncludes.h"
 
 //Stats are randomly determined
 Gladiator::Gladiator(int team) {
@@ -64,6 +66,112 @@ Gladiator::Gladiator(int hp, int atk, int def, int sup, int acc, int ev, int tea
 
 
 }
+
+//////////////////////////////////////
+///////////// GUI STUFF //////////////
+//////////////////////////////////////
+void Gladiator::my_ImGui_draw_method() {
+		if (ImGui::TreeNode("Gladiator"))
+		{
+			if (gui_enabled) {
+				ImGui::Text("GLADIATOR INFORMATION");
+
+
+				//TODO: image stuff ImGui::Image();
+				ImGui::Text("%s %s", this->firstname.c_str(), this->lastname.c_str());
+				//Personality is hidden information
+				//AI is hidden information           //TODO: since this is strategically relevant, consider changing this
+
+				ImGui::Text("Upgrade points: %d", this->points);
+
+				ImGui::Text("Hit Points: %d", this->maxHP);
+				if (ImGui::Button("Increase HP")) {
+					if (points > 0) {
+						this->maxHP++;
+						points--;
+						dialogue = this->D_IncreaseHP();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+				ImGui::Text("Attack: %d", this->baseAtk);
+				if (ImGui::Button("Increase Atk")) {
+					if (points > 0) {
+						this->baseAtk++;
+						points--;
+						dialogue = this->D_IncreaseAtk();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+				ImGui::Text("Defense: %d", this->baseDef);
+				if (ImGui::Button("Increase Def")) {
+					if (points > 0) {
+						this->baseDef++;
+						points--;
+						dialogue = this->D_IncreaseDef();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+				ImGui::Text("Accuracy: %d", this->baseAcc);
+				if (ImGui::Button("Increase Acc")) {
+					if (points > 0) {
+						this->baseAcc++;
+						points--;
+						dialogue = this->D_IncreaseAcc();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+				ImGui::Text("Evade: %d", this->baseEv);
+				if (ImGui::Button("Increase Ev")) {
+					if (points > 0) {
+						this->baseEv++;
+						points--;
+						dialogue = this->D_IncreaseEv();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+				ImGui::Text("Support: %d", this->baseSup);
+				if (ImGui::Button("Increase Sup")) {
+					if (points > 0) {
+						this->baseSup++;
+						points--;
+						dialogue = this->D_IncreaseSup();
+					}
+					else {
+						dialogue = this->D_IncreaseFail();
+					}
+				}
+
+
+				ImGui::Text("%s %s Says: %s", this->firstname.c_str(), this->lastname.c_str(), dialogue.c_str());
+			}
+			else {
+				ImGui::Text("This GUI is not available at this time!");
+			}
+
+
+			//ImGui::Checkbox( "Add More Widgets here", &myVal);
+			ImGui::TreePop(); //ends your TreeNode (the "collapse" arrow hides all widgets 
+			//between here and the above call to ImGui::TreeNode(...)
+		}
+		ImGui::Separator(); //draws bottom separator
+}
+
+
 
 //////////////////////////////////////
 //////// DIALOGUE FUNCS //////////////

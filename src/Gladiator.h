@@ -118,6 +118,8 @@ class Gladiator {
 		std::string lastname;  //The character's last name
 		Personality personality; //The character's personality
 
+		std::string dialogue;
+
 
 		/////////////////////////////////
 		/////////// OTHER ///////////////
@@ -128,9 +130,21 @@ class Gladiator {
 		int xpos;  //The gladiator's x and y positions on the board
 		int ypos;
 
+
+		/////////////////////////////////
+		///////// GUI STUFF /////////////
+		/////////////////////////////////
+
+
+		int points = 0; //Points remaining for upgrades
+		bool gui_enabled = true; //whether we should be able to see the gladiator gui
+		void my_ImGui_draw_method(); //Drawing the gui
+
 		/////////////////////////////////
 		/////////// FUNCTIONS ///////////
 		/////////////////////////////////
+
+		
 
 		/////////////////////////////////
 		////////// DIALOGUE /////////////

@@ -2,6 +2,7 @@
 
 #include "GLView.h"
 #include "Gladiator.h"
+#include "TestGUI.h"
 
 namespace Aftr
 {
@@ -47,6 +48,9 @@ public:
    WO* p_board[7][7];
    //the pieces (physical representation)
    WO* pieces[7][7];
+   //tester GUI (please stop being const
+   TestGUI tester;
+   
 
 protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );

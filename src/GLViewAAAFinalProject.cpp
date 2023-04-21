@@ -36,6 +36,7 @@
 
 #include "Gladiator.h"
 #include "GladiatorGUI.h"
+#include "TestGUI.h"
 
 using namespace Aftr;
 
@@ -75,13 +76,27 @@ std::string dub(std::vector<std::string> nameList) {
 /////////////////////////////////////////////////////////////////
 
 bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is whether or not the player lost the fight (true means they lost)
-    //TODO: all of this
+    int players_lost = false;
     
-    return false;
+    //////TODO: all of this
+    //Turn on UI
+    //Get the lengths of both teams
+    // UNTIL IT IS OVER::::
+    //Alternate between them
+    //When selecting someone, first:
+    ////move them
+    ////find out if they are in range to use a skill
+    ////find their AI
+    ////use the skill, if applicable
+    ////Remove people if they are dead
+    
+    return players_lost;
 }
 
 void GLViewAAAFinalProject::downtimePhase() {
-    //TODO: all of this
+    //////TODO: all of this
+    //go through the vector of allies to turn UI on
+    //??????
 }
 
 void GLViewAAAFinalProject::phaseHandler() {
@@ -408,11 +423,54 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        std::cout << "The " << i << "th ally gladiator is named " << allies[i].firstname << " " << allies[i].lastname << "." << std::endl;
    }
 
-   Gladiator* testGlad = &allies[0];
 
-   GladiatorGUI* test = GladiatorGUI::New(nullptr, testGlad, 5.0f, 5.0f);
-   test->gladiator = testGlad;
-   this->worldLst->push_back(test);
+   //Gladiator* testGlad = &allies[0];
+   //Gladiator* testGlad2 = &allies[1];
+
+   //GladiatorGUI* test = GladiatorGUI::New(nullptr, testGlad, 5.0f, 5.0f);
+   //test->gladiator = testGlad;
+   //this->worldLst->push_back(test);
+
+   //test = GladiatorGUI::New(nullptr, testGlad, 5.0f, 5.0f);
+   //GladiatorGUI* test2 = GladiatorGUI::New(nullptr, testGlad2, 5.0f, 5.0f);
+   
+   //int theParam = 42;
+
+   tester = TestGUI();//TestGUI(board, p_board, pieces, allies, enemies);
+   TestGUI* tester2 = &tester;
+   //std::vector<TestGUI> unmutable;
+   //unmutable.push_back(tester);
+
+   WOImGui* gui = WOImGui::New(nullptr);
+   gui->subscribe_drawImGuiWidget(
+       [this, gui, tester2]()
+       {
+           //Here is a super neato paradigm that could be extended to support real-time introspection.
+           //This is the glue code that is called from within the WOImGui instance...
+           //Whenever a WO wants to draw some Gui stuff about that WO's internal state,
+           //it simply asks the gui to call a function. That function is this lambda.
+           //Since we don't want to put the entire ImGui draw call right here (even though
+           //we could), let's just have the lambda call the corresponding WO's drawImGui_
+           //method.
+           //this->
+           Gladiator* glad0 = &allies[0];
+           Gladiator* glad1 = &allies[1];
+           Gladiator* glad2 = &allies[2];
+           Gladiator* glad3 = &allies[3];
+           Gladiator* glad4 = &allies[4];
+           glad0->my_ImGui_draw_method();
+           glad1->my_ImGui_draw_method();
+           glad2->my_ImGui_draw_method();
+           glad3->my_ImGui_draw_method();
+           glad4->my_ImGui_draw_method();
+           //TestGUI* tester2 = &unmutable[0];
+           tester2->drawMover();
+           tester2->drawCombat();
+ 
+
+       });
+   this->worldLst->push_back(gui);
+
 
    for (int i = 0; i < 7; i++) {
        for (int j = 0; j < 7; j++) {
@@ -423,17 +481,36 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        }
    }
 
+   for (int i = 0; i < 5; i++) {        //Create ally pieces
+       WO* wo = WO::New(shinyRedPlasticCube, Vector(0.5, 0.5, 0.5), MESH_SHADING_TYPE::mstFLAT);
+       auto vec = p_board[0][i]->getPosition();
+       float x = vec[0]; float y = vec[1];
+       wo->setPosition(x, y, 4);
+       pieces[0][i] = wo;
+       this->worldLst->push_back(wo);
+   }
+
+   for (int i = 0; i < 5; i++) {       //Create enemy pieces
+       WO* wo = WO::New(shinyRedPlasticCube, Vector(0.5, 0.5, 0.5), MESH_SHADING_TYPE::mstFLAT);
+       auto vec = p_board[6][6-i]->getPosition();
+       float x = vec[0]; float y = vec[1];
+       wo->setPosition(x, y, 4);
+       pieces[6][6-i] = wo;
+       this->worldLst->push_back(wo);
+   }
+
+   for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
+       board[0][i] = &allies[i];
+   }
+
 
 
    createAAAFinalProjectWayPoints();
 }
 
 //TODO list:
-//1. GUI for displaying gladiators
-//2. Manipulating stats of gladiators
-//3. Game board
-//4. Combat
-//5. Shop
+//1. Combat <------ the big one
+//2. Shop
 
 
 
