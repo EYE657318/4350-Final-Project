@@ -59,6 +59,13 @@ protected:
    void downtimePhase();
    bool combatPhase();
    void phaseHandler();
+   bool somethingMoves();
+   bool somethingActs();
+
+   //pacing control
+   bool began = false;
+   int phase = 0; //0 is downtime, 1 is combat
+   int step = 0; //only used in combat. 0 is ally move, 1 ally act, 2 enemy move, 3 enemy act
 };
 
 /** \} */

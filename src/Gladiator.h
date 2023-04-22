@@ -108,6 +108,8 @@ class Gladiator {
 		int team;  //Whose team are they on? 0 = player, 1 = enemy;
 
 		bool active = true;  //When the unit has already taken a turn, this becomes false
+		bool original = true;  //false if this replaced a dead gladiator
+		bool alive = true;
 
 		/////////////////////////////////
 		/////////// COSMETIC ////////////
@@ -129,6 +131,7 @@ class Gladiator {
 
 		int xpos;  //The gladiator's x and y positions on the board
 		int ypos;
+
 
 
 		/////////////////////////////////

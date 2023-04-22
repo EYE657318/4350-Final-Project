@@ -16,6 +16,17 @@
 		void drawCombat();
 		TestGUI();
 		bool to_move = false;
+		bool next = false;
+		bool combatEnabled = false;
+
+		//narration is commentary on what has just happened
+		//dialogue is what the ally gladiator has to say about it
+		std::string narration;
+		std::string dialogue;
+
+		//these are the names of the character currently speaking
+		std::string firstname;
+		std::string lastname;
 
 	protected:
 		/*Gladiator* board[7][7];

@@ -75,20 +75,247 @@ std::string dub(std::vector<std::string> nameList) {
 /////////////////// COMBAT STUFF ////////////////////////////////
 /////////////////////////////////////////////////////////////////
 
+bool GLViewAAAFinalProject::somethingMoves() {
+    //TODO: port moving code here. team-agnostic
+    
+    //consider returning index of ally acting
+    return false;
+}
+
+bool GLViewAAAFinalProject::somethingActs() {
+    //TODO: acting code. team-agnostic
+
+    return false;
+}
+
 bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is whether or not the player lost the fight (true means they lost)
     int players_lost = false;
-    
-    //////TODO: all of this
-    //Turn on UI
+    //Turn on combat UI
+    tester.combatEnabled = true;
     //Get the lengths of both teams
-    // UNTIL IT IS OVER::::
-    //Alternate between them
-    //When selecting someone, first:
-    ////move them
-    ////find out if they are in range to use a skill
-    ////find their AI
-    ////use the skill, if applicable
-    ////Remove people if they are dead
+    int ally_len = allies.size();
+    int enem_len = enemies.size();
+
+    //when "next" is clicked on the combat UI, this is set to true
+    //bool next = false; 
+
+    std::cout << "setup for combat phase" << std::endl;
+
+    tester.narration = " taps their foot... it's time for the next round.";
+  
+    //while (!tester.next) {
+
+   // }
+   // tester.next = false;
+
+    //TODO: create the enemies (put it before we get enemies.size())
+    
+    while (true){
+        //////TODO: all of this
+
+        ////
+        ////  AN ALLY MOVES
+        ////
+        
+        //Check the allies to see if there is anyone left who is both alive and has not taken a turn yet.
+        //Return the index of the first valid gladiator
+        int to_move = -1;
+        for (int i = 0; i < ally_len; i++) {
+            if (allies[i].alive && allies[i].active) {
+                to_move = i;
+                break;
+            }
+        }
+        std::cout << "after first pass, to_move is " << to_move << std::endl;
+        //If no one was found, refresh all the gladiators who are alive, then return the index of the first one
+        if (to_move == -1) {
+            //Refresh them all
+            for (int i = 0; i < ally_len; i++) {
+                if (allies[i].alive) {
+                    allies[i].active = true;
+                }
+            }
+            std::cout << "refreshed allies" << std::endl;
+            //Get the first one
+            for (int i = 0; i < ally_len; i++) {
+                if (allies[i].alive && allies[i].active) {
+                    to_move = i;
+                    break;
+                }
+            }
+        }
+        std::cout << "after second pass, to_move is " << to_move << std::endl;
+        //If, after all that there STILL isn't a valid gladiator, they are all dead. exit
+        if (to_move == -1) {
+            players_lost = true;
+            break;
+        }
+
+        /*
+        //Get the ally's position on the board
+        int ally_x = allies[to_move].xpos;
+        int ally_y = allies[to_move].ypos;
+        //Where they plan to go
+        //(I have put defaults because the compiler was yelling at me, however it shouldn't be possible for the program to use them)
+        int ally_move_x = 0;
+        int ally_move_y = 0;
+        //Determine where to move
+        //Movement is biased towards moving closer to the center
+        if (ally_x - 3 < 0 && ally_y - 3 < 0) {
+            //biased to going positive in both directions
+            int random = rand() % 6;
+            switch (random) {
+            case 0:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 1:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 2:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            case 3:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            case 4:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 5:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            }
+        }
+        else if (ally_x - 3 < 0 && ally_y - 3 >= 0) {
+            //biased to going positive x,  negative y
+            int random = rand() % 6;
+            switch (random) {
+            case 0:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 1:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 2:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            case 3:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            case 4:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 5:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            }
+        }
+        else if (ally_x - 3 >= 0 && ally_y - 3 < 0) {
+            //biased to going negative x, positive y
+            int random = rand() % 6;
+            switch (random) {
+            case 0:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 1:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 2:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            case 3:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            case 4:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 5:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            }
+        }
+        else {
+            //TODO: biased to going negative in both directions
+            int random = rand() % 6;
+            switch (random) {
+            case 0:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 1:
+                ally_move_x = ally_x - 1;
+                ally_move_y = ally_y;
+                break;
+            case 2:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            case 3:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y - 1;
+                break;
+            case 4:
+                ally_move_x = ally_x + 1;
+                ally_move_y = ally_y;
+                break;
+            case 5:
+                ally_move_x = ally_x;
+                ally_move_y = ally_y + 1;
+                break;
+            }
+        }
+        
+        //The actual movement
+        if (board[ally_move_x][ally_move_y] != NULL) {
+            tester.firstname = allies[to_move].firstname;
+            tester.lastname = allies[to_move].lastname;
+            tester.narration = "encountered a problem trying to move to their chosen space.";
+            //TODO: dialogue
+        }
+        else {
+            tester.firstname = allies[to_move].firstname;
+            tester.lastname = allies[to_move].lastname;
+            tester.narration = "should have just moved (but didn't cause that's not implemented yet).";
+        }
+        */
+
+        //TODO, FOR THE ALLY:
+        ////move them
+        ////find out if they are in range to use a skill
+        ////find their AI
+        ////use the skill, if applicable
+        ////Remove people if they are dead
+
+
+        //TODO, FOR THE ENEMY:
+        ////figure out which one is chosen
+        ////move them
+        ////find out if they are in range to use a skill
+        ////find their AI
+        ////use the skill, if applicable
+        ////Remove people if they are dead
+
+        //TEMP FOR TESTING:
+        break;
+    }
+    
     
     return players_lost;
 }
@@ -97,18 +324,22 @@ void GLViewAAAFinalProject::downtimePhase() {
     //////TODO: all of this
     //go through the vector of allies to turn UI on
     //??????
+    std::cout << "temp downtime phase signifier" << std::endl;
 }
 
 void GLViewAAAFinalProject::phaseHandler() {
 
     int rounds = 0;         //Currently I plan for there to be 10, but this can change
     bool lost = false;      //If the player has lost
+   
+    std::cout << "combat disabled" << std::endl;
 
     while (rounds < 10) {
 
         this->downtimePhase();      //Run through the downtime phase
         lost = this->combatPhase(); //Run through the combat phase
-        if (lost) {break;} else {rounds++;} 
+        if (lost) { break; std::cout << "we lost!" << std::endl; }
+        else { rounds++; std::cout << "onto the next round! current is"  << rounds << std::endl; }
     }
 
     if (lost) {
@@ -153,6 +384,9 @@ void GLViewAAAFinalProject::onCreate()
    }
    this->setActorChaseType( STANDARDEZNAV ); //Default is STANDARDEZNAV mode
    //this->setNumPhysicsStepsPerRender( 0 ); //pause physics engine on start up; will remain paused till set to 1
+
+   
+
 }
 
 
@@ -167,6 +401,16 @@ void GLViewAAAFinalProject::updateWorld()
    GLView::updateWorld(); //Just call the parent's update world first.
                           //If you want to add additional functionality, do it after
                           //this call.
+
+   //I don't like running this if statement every second, but putting this in onCreate meant the engine never really started, so.....
+   //if (!began) {
+       /////////////////////
+       ////////BEGIN////////
+       /////////////////////
+   //    began = true;
+   //    phaseHandler();
+   //}
+
 }
 
 
@@ -202,6 +446,25 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
    if( key.keysym.sym == SDLK_1 )
    {
+
+   }
+
+   if (key.keysym.sym == SDLK_SPACE) {
+       //TODO: MAIN STRUCTURE!
+       //Problems with figuring out how to wait for stuff before, so new plan:
+       //Spacebar is the "do next thing" button.
+       //We will keep track of what "phase" (combat/downtime) we are on and what "step" (movement/action) we are on
+       //
+       //phase: combat
+       //step 1: move ally
+       //step 2: act ally
+       //step 3: move enemy
+       //step 4: act enemy
+       //loop
+       //
+       //phase: downtime
+       //space should just end this, it's all menus for editing characters
+
 
    }
 }
@@ -499,6 +762,15 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        this->worldLst->push_back(wo);
    }
 
+   //NULL everything on the board to start
+   for (int i = 0; i < 7; i++) {
+       for (int j = 0; j < 7; j++) {
+           board[i][j] = NULL;
+       }
+   }
+
+   //TODO: enemy gladiator piece and assignment to board
+
    for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
        board[0][i] = &allies[i];
    }
@@ -506,11 +778,19 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
 
    createAAAFinalProjectWayPoints();
+
+   
+
 }
 
 //TODO list:
 //1. Combat <------ the big one
 //2. Shop
+
+//Misc:
+//textures, models, skubox
+//get portraits to actually work
+//more names
 
 
 

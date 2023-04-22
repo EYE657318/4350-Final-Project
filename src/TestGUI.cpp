@@ -7,6 +7,19 @@
 #include "TestGUI.h"
 #include "WOImGui.h" //GUI Demos also need to #include "AftrImGuiIncludes.h"
 #include "AftrImGuiIncludes.h"
+#include "GLViewAAAFinalProject.h"
+#include "GLView.h"
+#include "WorldContainer.h"
+#include "AftrManagers.h"
+#include <iostream>
+#include <sstream>
+#include <string>
+#include "AftrManagers.h"
+#include "Vector.h"
+#include "WO.h"
+#include "GLView.h"
+#include "WorldContainer.h"
+
 
 
 	/*TestGUI::TestGUI(Gladiator* board[7][7], Aftr::WO* p_board[7][7], Aftr::WO* pieces[7][7], std::vector<Gladiator> allies, std::vector<Gladiator> enemies) {
@@ -24,9 +37,11 @@
 	void TestGUI::drawMover() {
 		if (ImGui::TreeNode("MoverGUI"))
 		{
-			if (ImGui::Button("Move!")) {
-				to_move = true;
-			}
+				if (ImGui::Button("Move!")) {
+					to_move = true;
+				}
+	
+		
 
 
 			ImGui::TreePop(); //ends your TreeNode (the "collapse" arrow hides all widgets
@@ -37,8 +52,23 @@
 	void TestGUI::drawCombat() {
 		if (ImGui::TreeNode("FighterGUI"))
 		{
-			if (ImGui::Button("Next!")) {
-				//to_move = true;
+			if (combatEnabled) {
+
+
+				if (ImGui::Button("Next!")) {
+					next = true;
+				}
+
+				ImGui::Text("%s %s %s", firstname.c_str(), lastname.c_str(), narration.c_str());
+				ImGui::Text("%s %s says: %s", firstname.c_str(), lastname.c_str(), dialogue.c_str());
+
+			}else {
+				ImGui::Text("Combat GUI not enabled right now!");
+				if (ImGui::Button("Start Combat")) {
+					combatEnabled = true;
+					//GLViewAAAFinalProject* glv = ManagerGLView::getGLViewT<GLViewAssignment6Networking>();
+					//glv->changeCube(this->posX, this->posY, this->posZ, this->locX, this->locY, this->locZ, this->skin)
+				}
 			}
 
 
