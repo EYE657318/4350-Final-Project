@@ -553,6 +553,9 @@ bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curpo
         return false;
     }
 
+    //TEMP for debugging
+    return true;
+
 }
 
 
@@ -593,7 +596,16 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    if (hasLiving(allies)) {
                        cur_actor = getNext(allies);
                        allies[cur_actor].active = false;                            //Deactivate them; this is their turn.
-                       std::cout << "Phase: move ally " << cur_actor << "\n";
+                       int move[2];
+                       bool valid_move = targetPos(move, board, allies[cur_actor].xpos, allies[cur_actor].ypos);
+                       if (valid_move) {
+                           std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
+                               ") should move to (" << move[0] << ", " << move[1] << ").\n";
+                       }
+                       else {
+                           std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
+                               ") can't move to (" << move[0] << ", " << move[1] << ").\n";
+                       }
                        step++;
                    }
                    else {
@@ -622,7 +634,6 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                else {
                    std::cout << "All allies dead, none to move!\n";
                }
-               step++;
                 }
                break;
            case 3:
@@ -964,6 +975,8 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
    for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
        board[0][i] = &allies[i];
+       allies[i].xpos = 0;
+       allies[i].ypos = i;
    }
 
 
