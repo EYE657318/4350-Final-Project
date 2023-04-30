@@ -78,6 +78,8 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 "Sava", "Scodopordunicus", "Secundus", "Servilius", "Sittius", "Terentius", "Terminalis", "Tettius",
 "Theophilos", "Thetis", "Thymele", "Tiburtinus", "Titus", "Trebonius", "Tyche", "Valens", "Valentina",
 "Valeria", "Vatifon", "Veneria", "Venus", "Venuleius", "Vera", "Verecunnus", "Vibii", "Victor", "Zosimus", "Zeus",
+//My pets
+"Houdini", "Alfredo", "Jack", "Bebe",
 //The following names were submitted by outside parties:
 "Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy"};
 
@@ -95,20 +97,7 @@ std::string dub(std::vector<std::string> nameList) {
 /////////////////////////////////////////////////////////////////
 //These functions are all out of date. Check for the new ones down by OnKeyPress
 
-/*bool GLViewAAAFinalProject::somethingMoves() {
-    //TODO: port moving code here. team-agnostic
-    
-    //consider returning index of ally acting
-    return false;
-}
-
-bool GLViewAAAFinalProject::somethingActs() {
-    //TODO: acting code. team-agnostic
-
-    return false;
-}
-
-bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is whether or not the player lost the fight (true means they lost)
+/*bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is whether or not the player lost the fight (true means they lost)
     int players_lost = false;
     //Turn on combat UI
     tester.combatEnabled = true;
@@ -187,22 +176,6 @@ bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is
         }
         */
 
-        //TODO, FOR THE ALLY:
-        ////move them
-        ////find out if they are in range to use a skill
-        ////find their AI
-        ////use the skill, if applicable
-        ////Remove people if they are dead
-
-
-        //TODO, FOR THE ENEMY:
-        ////figure out which one is chosen
-        ////move them
-        ////find out if they are in range to use a skill
-        ////find their AI
-        ////use the skill, if applicable
-        ////Remove people if they are dead
-
         //TEMP FOR TESTING:
         /*break;
     }
@@ -211,14 +184,7 @@ bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is
     return players_lost;
 }*/
 
-/*void GLViewAAAFinalProject::downtimePhase() {
-    //////TODO: all of this
-    //go through the vector of allies to turn UI on
-    //??????
-    std::cout << "temp downtime phase signifier" << std::endl;
-}
-
-void GLViewAAAFinalProject::phaseHandler() {
+/*void GLViewAAAFinalProject::phaseHandler() {
 
     int rounds = 0;         //Currently I plan for there to be 10, but this can change
     bool lost = false;      //If the player has lost
@@ -835,6 +801,45 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
 
 }
 
+void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int heal = 3 + (glad.curSup / 5);
+    std::cout << "The gladiator healed for " << heal << " health \n";
+    board[xtarg][ytarg]->curHP += heal;
+    if (board[xtarg][ytarg]->curHP > board[xtarg][ytarg]->maxHP) {
+        board[xtarg][ytarg]->curHP = board[xtarg][ytarg]->maxHP;
+    }
+    //TODO: narration
+}
+
+void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int inspire = 1 + (glad.curSup / 10);
+    std::cout << "The gladiator inspired for " << inspire << " attack \n";
+    board[xtarg][ytarg]->curAtk += inspire;
+    //TODO: narration
+
+}
+
+void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int resolve = 1 + (glad.curSup / 10);
+    std::cout << "The gladiator resolved for " << resolve << " defense \n";
+    board[xtarg][ytarg]->curDef += resolve;
+    //TODO: narration
+
+}
+
+void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    //This one isn't increased by support -- that would be too broken
+    //It also doesn't increase the current stat -- this is long-term only!
+    std::cout << "The gladiator trained the target in attack\n";
+    board[xtarg][ytarg]->curAtk ++;
+    //TODO: narration
+
+}
+
 //The big one
 //This is the function that is called to make a gladiator actually act
 //act_type is the type of action being performed (true = attack, false = support)
@@ -899,9 +904,14 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         //OFFENSIVE ACTION: ATTACK
         //A normal attack. Calculates accuracy versus evade, and attack versus defense
         case Attack: skillAttack(glad, board, pieces, xtarg, ytarg); break;
+        //Only takes half of the target's defense into account. -10 accuracy
         case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg); break;
+        //Reduces the target's defense by 2 for the rest of combat. -10 accuracy
         case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg); break;
+        //Reduces the target's attack by 1 for the rest of combat. -10 accuracy
         case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg); break;
+        //Uh oh, you forgot to implement something!
+        default: std::cout << "This skill hasn't been implemented yet!\n";
         }
     
     
@@ -909,6 +919,12 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         //get the skill that will be used
         int random = rand() % 2;
         SupSkill action = (random == 0) ? glad.sup1 : glad.sup2;
+        switch (action) {
+        case Heal: skillHeal(glad, board, pieces, xtarg, ytarg);  break;
+        case Inspire: skillInspire(glad, board, pieces, xtarg, ytarg); break;
+        case Resolve: skillResolve(glad, board, pieces, xtarg, ytarg);  break;
+        case Train: skillTrain(glad, board, pieces, xtarg, ytarg);  break;
+        }
     
     
     }

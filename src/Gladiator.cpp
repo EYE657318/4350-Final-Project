@@ -103,7 +103,7 @@ void Gladiator::my_ImGui_draw_method() {
 					}
 				}
 
-				ImGui::Text("Attack: %d", baseAtk);
+				ImGui::Text("Attack: %d / %d", curAtk, baseAtk);
 				if (ImGui::Button("Increase Atk")) {
 					if (points > 0) {
 						baseAtk++;
@@ -115,7 +115,7 @@ void Gladiator::my_ImGui_draw_method() {
 					}
 				}
 
-				ImGui::Text("Defense: %d", baseDef);
+				ImGui::Text("Defense: %d / %d", curDef, baseDef);
 				if (ImGui::Button("Increase Def")) {
 					if (points > 0) {
 						baseDef++;
@@ -127,7 +127,7 @@ void Gladiator::my_ImGui_draw_method() {
 					}
 				}
 
-				ImGui::Text("Accuracy: %d", baseAcc);
+				ImGui::Text("Accuracy: %d / %d", curAcc, baseAcc);
 				if (ImGui::Button("Increase Acc")) {
 					if (points > 0) {
 						baseAcc++;
@@ -139,7 +139,7 @@ void Gladiator::my_ImGui_draw_method() {
 					}
 				}
 
-				ImGui::Text("Evade: %d", baseEv);
+				ImGui::Text("Evade: %d / %d", curEv, baseEv);
 				if (ImGui::Button("Increase Ev")) {
 					if (points > 0) {
 						baseEv++;
@@ -151,7 +151,7 @@ void Gladiator::my_ImGui_draw_method() {
 					}
 				}
 
-				ImGui::Text("Support: %d", baseSup);
+				ImGui::Text("Support: %d / %d", curSup, baseSup);
 				if (ImGui::Button("Increase Sup")) {
 					if (points > 0) {
 						baseSup++;
