@@ -61,7 +61,10 @@ GLViewAAAFinalProject* GLViewAAAFinalProject::New( const std::vector< std::strin
 //This is to emphasize the strangeness of this world.
 std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios", "Aegyptus", "Aemilius", "Africana", "Africanus",
 "Ajax", "Albanus", "Alexander", "Amandus", "Amethystus", "Amianthus", "Amor", "Ampliatus", "Anicetus", "Andromeda",
-"Apelles", "Antonius", "Apollodoru" };
+"Apelles", "Antonius", "Apollodoru", "Bellicus", "Brutus", "Balbus", "Badius", "Caelus", "Caesar", "Caesia", "Callistus",
+"Camillus", "Capito", "Castus", "Catulus", "Ceius", "Celadus", "Cerdo", "Cerrinius", "Chius", "Chloe", "Coelius", "Conopis", 
+"Corus", "Communis", "Dadanus", "Duacus", "Drusus", "Dido", "December", "Danne", "Danaus", "Damoetas", "Ecidia", "Entellus", 
+"Eucinus", "Eros", "Epise", "Ephesus", "Euplia", "Epremus", "Elea"};
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
@@ -669,12 +672,44 @@ void selectSkin(bool team, bool activate, WO* wo) {
 
 }
 
+///////////////////////////////////////////////
+////////////// ACTIONS ////////////////////////
+///////////////////////////////////////////////
+//
+// Each of these functions corresponds to one offensive or support skill
+//
+
+void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 70 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator hit for " << damage << " damage!\n";
+        //TODO: narration
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+
+        //TODO: test for death               
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        //TODO: narration
+    }
+}
+
 
 //The big one
 //This is the function that is called to make a gladiator actually act
 //act_type is the type of action being performed (true = attack, false = support)
 //This will likely have a lot of bugs at the start! Hopefully they're fixed by the time anyone else sees this!
-void Act(bool act_type, Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7]) {
+void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7]) {
 
     //Get info about gladiator
     int xpos = glad.xpos;
@@ -733,30 +768,7 @@ void Act(bool act_type, Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7]
         switch (action) {                                               //Maybe to random generation/shop depending
         //OFFENSIVE ACTION: ATTACK
         //A normal attack. Calculates accuracy versus evade, and attack versus defense
-        case Attack: {
-            int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
-            if (damage <= 0) { damage = 1;}
-            int accuracy = 70 + glad.curAcc - board[xtarg][ytarg]->curEv;
-            if (accuracy < 20) { accuracy = 20;}
-            int accroll = rand() % 100;
-            bool hit = true;
-            if (accroll > accuracy) { hit = false;}
-            if (hit) {
-                std::cout << "The gladiator hit for " << damage << " damage!\n";
-                //TODO: narration
-
-                board[xtarg][ytarg]->curHP -= damage;
-                std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
-
-                //TODO: test for death               
-
-            }
-            else {
-                std::cout << "The gladiator missed!\n";
-                //TODO: narration
-            }
-
-        } break;
+        case Attack: skillAttack(glad, board, pieces, xtarg, ytarg); break;
         case Pierce: {} break;
         case Bonebreaker: {} break;
         case Swordbreaker: {} break;
