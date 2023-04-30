@@ -6,11 +6,13 @@
 //////////////////////////////////////////
 
 //Enum: Offensive skills the gladiators can have
-//Add more as needed
-enum OffSkill{
+//Add more as needed                                //NOTE: to add a skill, put it here, and put its code in Act(),
+enum OffSkill{                                      //maybe random generation/shop too depending
 	Attack,          //A normal attack
 	Pierce,          //An attack that ignores some defense
-	Net,             //An attack that reduces the target's movement
+	Bonebreaker,     //An attack that (temporarily) reduces the target's defense
+	Swordbreaker,    //An attack that (temporarily) reduces the target's attack
+	//Sweep,         //Attacks enemies adjacent to the target
 };
 
 //Enum: Support skills the gladiators can have

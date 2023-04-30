@@ -723,6 +723,53 @@ void Act(bool act_type, Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7]
         std::cout << "This character will support the gladiator at (" << xtarg << ", " << ytarg << ").\n";
     }
     
+    //Actually use the skill
+    if(act_type){
+        //get the skill that will be used
+        int random = rand() % 2;
+        OffSkill action = (random == 0) ? glad.off1 : glad.off2;
+
+        //Do the thing                                                  //NOTE: to add a new skill, add it here! (and to enum)
+        switch (action) {                                               //Maybe to random generation/shop depending
+        //OFFENSIVE ACTION: ATTACK
+        //A normal attack. Calculates accuracy versus evade, and attack versus defense
+        case Attack: {
+            int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+            if (damage <= 0) { damage = 1;}
+            int accuracy = 70 + glad.curAcc - board[xtarg][ytarg]->curEv;
+            if (accuracy < 20) { accuracy = 20;}
+            int accroll = rand() % 100;
+            bool hit = true;
+            if (accroll > accuracy) { hit = false;}
+            if (hit) {
+                std::cout << "The gladiator hit for " << damage << " damage!\n";
+                //TODO: narration
+
+                board[xtarg][ytarg]->curHP -= damage;
+                std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+
+                //TODO: test for death               
+
+            }
+            else {
+                std::cout << "The gladiator missed!\n";
+                //TODO: narration
+            }
+
+        } break;
+        case Pierce: {} break;
+        case Bonebreaker: {} break;
+        case Swordbreaker: {} break;
+        }
+    
+    
+    }else{
+        //get the skill that will be used
+        int random = rand() % 2;
+        SupSkill action = (random == 0) ? glad.sup1 : glad.sup2;
+    
+    
+    }
 
 }
 

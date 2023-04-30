@@ -6,7 +6,7 @@
 Gladiator::Gladiator(int team) {
 	//Set the bases
 	this->maxHP = (rand() % 20)+10;     this->curHP = this->maxHP;     //Ranges from 10 to 29
-	this->baseAtk = (rand() % 5) + 1;   this->curAtk = this->baseAtk;  //Ranges from 1 to 5
+	this->baseAtk = (rand() % 10) + 1;   this->curAtk = this->baseAtk;  //Ranges from 1 to 10
 	this->baseDef = (rand() % 5) + 1;   this->curDef = this->baseDef;  //Ranges from 1 to 5
 	this->baseSup = (rand() % 10 + 2);  this->curSup = this->baseSup;  //Ranges from 2 to 11
 	this->baseAcc = (rand() % 20) + 10; this->curAcc = this->baseAcc;  //Ranges from 10 to 29
@@ -91,7 +91,7 @@ void Gladiator::my_ImGui_draw_method() {
 
 				ImGui::Text("Upgrade points: %d", points);
 
-				ImGui::Text("Hit Points: %d", maxHP);
+				ImGui::Text("Hit Points: %d / %d", curHP, maxHP);
 				if (ImGui::Button("Increase HP")) {
 					if (points > 0) {
 						maxHP++;
