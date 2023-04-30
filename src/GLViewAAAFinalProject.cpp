@@ -438,19 +438,211 @@ void GLViewAAAFinalProject::onMouseMove( const SDL_MouseMotionEvent& e )
 }
 
 
+//This function takes a team of gladiators.
+//Return:
+//true: at least one gladiator is alive
+//false: none are alive
+bool hasLiving(std::vector<Gladiator> team) {
+    bool index = false;
+    for (int i = 0; i < team.size(); i++) {
+        if (team[i].alive){
+            index = true;
+            break;
+        }
+    }
+    return index;
+}
+
+//This function takes a team of gladiators.
+//Return: the index of the next active gladiator (refreshes list if necessary)
+int getNext(std::vector<Gladiator> &team) {
+    int index = -1;
+    for (int i = 0; i < team.size(); i++) {
+        if (team[i].active && team[i].alive) {
+            //std::cout << "index " << i << " is valid\n";
+            return i;
+        }
+        else {
+            //std::cout << "index " << i << " is not valid\n";
+        }
+    }
+    //If it hasn't returned an index, none of them are both active and alive
+    //Refresh the list
+    for (int i = 0; i < team.size(); i++) {
+        if (team[i].alive) {
+            team[i].active = true;
+        }
+    }
+    //Call the function again with the new list
+    index = getNext(team);
+    return index;
+
+
+}
+
+//This function figures out where a gladiator will move next.
+//It edits targets so that targets[0] is the xpos and targets[1] is the ypos 
+//the board is the board, which will be checked for occupancy of the targeted space
+//curposx and curposy are the current positions of the gladiator being checked.
+//The function returns a bool that communicates whether the targeted space is occupied or not
+//The actual movement itself is handled by a seperate function.
+bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curposy) {    //[target xpos, target ypos]
+
+    //Determine where to move
+    //Movement is biased towards moving closer to the center
+    //I have no idea why I didn't just calculate x movement and y movement seperately, but I'm not changing it now.
+    if (curposx - 3 < 0 && curposy - 3 < 0) {
+        //biased to going positive in both directions
+        int random = rand() % 6;
+        switch (random) {
+            case 0: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 1: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 2: targets[0] = curposx; targets[1] = curposy + 1; break;
+            case 3: targets[0] = curposx; targets[1] = curposy + 1; break;
+            case 4: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 5: targets[0] = curposx; targets[1] = curposy - 1; break;
+        }
+    }
+    else if (curposx - 3 < 0 && curposy - 3 >= 0) {
+        //biased to going positive x,  negative y
+        int random = rand() % 6;
+        switch (random) {
+            case 0: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 1: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 2: targets[0] = curposx; targets[1] = curposy - 1; break;
+            case 3: targets[0] = curposx; targets[1] = curposy - 1; break;
+            case 4: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 5: targets[0] = curposx; targets[1] = curposy + 1; break;
+        }
+    }
+    else if (curposx - 3 >= 0 && curposy - 3 < 0) {
+        //biased to going negative x, positive y
+        int random = rand() % 6;
+        switch (random) {
+            case 0: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 1: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 2: targets[0] = curposx; targets[1] = curposy + 1; break;
+            case 3: targets[0] = curposx; targets[1] = curposy + 1; break;
+            case 4: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 5: targets[0] = curposx; targets[1] = curposy - 1; break;
+        }
+    }
+    else {
+        //biased to going negative in both directions
+        int random = rand() % 6;
+        switch (random) {
+            case 0: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 1: targets[0] = curposx - 1; targets[1] = curposy; break;
+            case 2: targets[0] = curposx; targets[1] = curposy - 1; break;
+            case 3: targets[0] = curposx; targets[1] = curposy - 1; break;
+            case 4: targets[0] = curposx + 1; targets[1] = curposy; break;
+            case 5: targets[0] = curposx; targets[1] = curposy + 1; break;
+        }
+    }
+
+    //Account for potential out-of-bounds (make them go in the opposite direction)
+    if (targets[0] == -1) { targets[0] = 1; }
+    if (targets[0] == 7) { targets[0] = 5; }
+    if (targets[1] == -1) { targets[1] = 1; }
+    if (targets[1] == 7) { targets[1] = 5; }
+
+    if (board[targets[0]][targets[1]] == NULL){
+        return true;
+    }
+    else {
+        return false;
+    }
+
+}
+
+
 void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 {
    GLView::onKeyDown( key );
    if( key.keysym.sym == SDLK_0 )
       this->setNumPhysicsStepsPerRender( 1 );
 
-   if( key.keysym.sym == SDLK_1 )
-   {
-
-   }
-
    if (key.keysym.sym == SDLK_SPACE) {
-       //TODO: MAIN STRUCTURE!
+
+       if (phase == 0) {
+           //We are in downtime. Switch to combat
+           step = 0;
+           phase = 1;
+           std::cout << "Phase: end downtime\n";
+           
+           //Create a new set of enemies
+           enemies.clear();
+           for (int i = 0; i < 5; i++) {
+               Gladiator newglad = Gladiator(1);
+               newglad.firstname = dub(nameList);
+               newglad.lastname = dub(nameList);
+               enemies.push_back(newglad);
+           }
+           
+           //TODO: all of this
+
+
+
+       }
+       else {
+          //We are in combat.
+           switch (step) {
+           case 0:
+               {/*TODO: move ally*/
+                   cur_actor = -1;
+                   if (hasLiving(allies)) {
+                       cur_actor = getNext(allies);
+                       allies[cur_actor].active = false;                            //Deactivate them; this is their turn.
+                       std::cout << "Phase: move ally " << cur_actor << "\n";
+                       step++;
+                   }
+                   else {
+                       std::cout << "All allies dead, none to move!\n";
+                   }
+               }
+               break;
+           case 1:
+               {/*TODO: act ally*/
+                                        //NOTE: If I ever add an effect that would allow for movement to kill someone,
+                                        //check if cur_actor is still alive here
+               std::cout << "Phase: act ally " << cur_actor << "\n";
+               step++;
+               }
+               break;
+           case 2:
+               {/*TODO: move enemy*/
+               std::cout << "Phase: move enemy\n";
+               cur_actor = -1;
+               if (hasLiving(enemies)) {
+                   cur_actor = getNext(enemies);
+                   enemies[cur_actor].active = false;                            //Deactivate them; this is their turn.
+                   std::cout << "Phase: move enemy " << cur_actor << "\n";
+                   step++;
+               }
+               else {
+                   std::cout << "All allies dead, none to move!\n";
+               }
+               step++;
+                }
+               break;
+           case 3:
+               {/*TODO: act enemy*/
+                                        //NOTE: If I ever add an effect that would allow for movement to kill someone,
+                                        //check if cur_actor is still alive here
+               std::cout << "Phase: act enemy " << cur_actor << "\n";
+               step = 0;
+                }
+               break;
+           default: 
+                {/*This should not happen*/
+               std::cout << "This should not happen\n";
+               step = 0;
+                }
+           }
+
+
+       }
+      
        //Problems with figuring out how to wait for stuff before, so new plan:
        //Spacebar is the "do next thing" button.
        //We will keep track of what "phase" (combat/downtime) we are on and what "step" (movement/action) we are on
@@ -675,11 +867,10 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    srand(time(NULL));
 
    for (int i = 0; i < 5; i++) {
-       Gladiator newglad = Gladiator(1);
+       Gladiator newglad = Gladiator(0);
        newglad.firstname = dub(nameList);
        newglad.lastname = dub(nameList);
        allies.push_back(newglad);
-       //TODO: also make the pieces
    }
 
    for (int i = 0; i < 5; i++) {

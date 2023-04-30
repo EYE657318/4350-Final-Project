@@ -139,7 +139,7 @@ class Gladiator {
 		/////////////////////////////////
 
 
-		int points = 0; //Points remaining for upgrades
+		int points = 5; //Points remaining for upgrades
 		bool gui_enabled = true; //whether we should be able to see the gladiator gui
 		void my_ImGui_draw_method(); //Drawing the gui
 

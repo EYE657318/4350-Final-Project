@@ -51,6 +51,11 @@ public:
    //tester GUI (please stop being const
    TestGUI tester;
    
+   //////////////////////////////
+   //// Other Combat Stuff //////
+   //////////////////////////////
+   //The gladiator who is currently being moved
+   int cur_actor;    
 
 protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );

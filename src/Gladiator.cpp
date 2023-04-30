@@ -71,93 +71,100 @@ Gladiator::Gladiator(int hp, int atk, int def, int sup, int acc, int ev, int tea
 ///////////// GUI STUFF //////////////
 //////////////////////////////////////
 void Gladiator::my_ImGui_draw_method() {
-		if (ImGui::TreeNode("Gladiator"))
+		std::string truename = firstname + " " + lastname;
+		if (ImGui::TreeNode(truename.c_str()))
 		{
 			if (gui_enabled) {
 				ImGui::Text("GLADIATOR INFORMATION");
 
 
 				//TODO: image stuff ImGui::Image();
-				ImGui::Text("%s %s", this->firstname.c_str(), this->lastname.c_str());
+				ImGui::Text("%s %s", firstname.c_str(), lastname.c_str());
 				//Personality is hidden information
 				//AI is hidden information           //TODO: since this is strategically relevant, consider changing this
 
-				ImGui::Text("Upgrade points: %d", this->points);
+				if (ImGui::Button("KILL (test)")) {
+					active = false;
+					alive = false;
+				}
+				ImGui::Text("Life status: %d and %d", active, alive);
 
-				ImGui::Text("Hit Points: %d", this->maxHP);
+				ImGui::Text("Upgrade points: %d", points);
+
+				ImGui::Text("Hit Points: %d", maxHP);
 				if (ImGui::Button("Increase HP")) {
 					if (points > 0) {
-						this->maxHP++;
+						maxHP++;
 						points--;
-						dialogue = this->D_IncreaseHP();
+						dialogue = D_IncreaseHP();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
-				ImGui::Text("Attack: %d", this->baseAtk);
+				ImGui::Text("Attack: %d", baseAtk);
 				if (ImGui::Button("Increase Atk")) {
 					if (points > 0) {
-						this->baseAtk++;
+						baseAtk++;
 						points--;
-						dialogue = this->D_IncreaseAtk();
+						dialogue = D_IncreaseAtk();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
-				ImGui::Text("Defense: %d", this->baseDef);
+				ImGui::Text("Defense: %d", baseDef);
 				if (ImGui::Button("Increase Def")) {
 					if (points > 0) {
-						this->baseDef++;
+						baseDef++;
 						points--;
-						dialogue = this->D_IncreaseDef();
+						dialogue = D_IncreaseDef();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
-				ImGui::Text("Accuracy: %d", this->baseAcc);
+				ImGui::Text("Accuracy: %d", baseAcc);
 				if (ImGui::Button("Increase Acc")) {
 					if (points > 0) {
-						this->baseAcc++;
+						baseAcc++;
 						points--;
-						dialogue = this->D_IncreaseAcc();
+						dialogue = D_IncreaseAcc();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
-				ImGui::Text("Evade: %d", this->baseEv);
+				ImGui::Text("Evade: %d", baseEv);
 				if (ImGui::Button("Increase Ev")) {
 					if (points > 0) {
-						this->baseEv++;
+						baseEv++;
 						points--;
-						dialogue = this->D_IncreaseEv();
+						dialogue = D_IncreaseEv();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
-				ImGui::Text("Support: %d", this->baseSup);
+				ImGui::Text("Support: %d", baseSup);
 				if (ImGui::Button("Increase Sup")) {
 					if (points > 0) {
-						this->baseSup++;
+						baseSup++;
 						points--;
-						dialogue = this->D_IncreaseSup();
+						dialogue = D_IncreaseSup();
 					}
 					else {
-						dialogue = this->D_IncreaseFail();
+						dialogue = D_IncreaseFail();
 					}
 				}
 
 
-				ImGui::Text("%s %s Says: %s", this->firstname.c_str(), this->lastname.c_str(), dialogue.c_str());
+				ImGui::Text("%s %s Says: %s", firstname.c_str(), lastname.c_str(), dialogue.c_str());
 			}
 			else {
 				ImGui::Text("This GUI is not available at this time!");

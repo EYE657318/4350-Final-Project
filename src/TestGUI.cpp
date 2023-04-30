@@ -40,7 +40,8 @@
 				if (ImGui::Button("Move!")) {
 					to_move = true;
 				}
-	
+				
+				ImGui::Text("%d", to_move);
 		
 
 
