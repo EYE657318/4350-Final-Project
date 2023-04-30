@@ -58,7 +58,7 @@ public:
    //// Other Combat Stuff //////
    //////////////////////////////
    //The gladiator who is currently being moved
-   int cur_actor;    
+   int cur_actor = -1;    
 
 protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );

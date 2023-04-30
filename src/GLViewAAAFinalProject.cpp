@@ -264,14 +264,9 @@ void GLViewAAAFinalProject::onCreate()
            WO* tile = p_board[i][j];
            tile->upon_async_model_loaded([tile]()
                {
-                   //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
-                   //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
                    std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Marble.png");
                    auto found = the_skin.value();
                    ModelMeshSkin skin(found);
-                   //skin.setShader()
-                   //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
-                   //oldSkin = skin;
                    skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
                    tile->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
@@ -286,14 +281,9 @@ void GLViewAAAFinalProject::onCreate()
        WO* piece2 = enemy_pieces[i];
        piece1->upon_async_model_loaded([piece1]()
            {
-               //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
-               //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
                std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Ally.png");
                auto found = the_skin.value();
                ModelMeshSkin skin(found);
-               //skin.setShader()
-               //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
-               //oldSkin = skin;
                skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
                piece1->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
@@ -303,14 +293,9 @@ void GLViewAAAFinalProject::onCreate()
            });
        piece2->upon_async_model_loaded([piece2]()
            {
-               //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
-               //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
                std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Enemy.png");
                auto found = the_skin.value();
                ModelMeshSkin skin(found);
-               //skin.setShader()
-               //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
-               //oldSkin = skin;
                skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
                piece2->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
@@ -640,6 +625,107 @@ int getFinalAction(bool first_act, Gladiator glad, Gladiator* board[7][7]) {
 
 }
 
+//Changes the skin of the game piece, so that the currently acting gladiator looks distinct from the others.
+//team: what team the piece is on; true: ally, false: enemy
+//activate: whether the piece needs to gain the gold border or lose it;
+//true: select, false: deselect
+void selectSkin(bool team, bool activate, WO* wo) {
+
+    std::string skin_str;
+    if (team) {
+        if (activate) {
+            skin_str = "../mm/images/skins/AllyG.png";
+        }
+        else {
+            skin_str = "../mm/images/skins/Ally.png";
+        }
+    }
+    else {
+        if (activate) {
+            skin_str = "../mm/images/skins/EnemyG.png";
+        }
+        else {
+            skin_str = "../mm/images/skins/Enemy.png";
+        }
+    }
+
+    std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(skin_str);
+    auto found = the_skin.value();
+    ModelMeshSkin skin(found);
+    skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+    wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+    /*wo->upon_async_model_loaded([wo, skin_str]()
+        {
+            std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(skin_str);
+            auto found = the_skin.value();
+            ModelMeshSkin skin(found);
+            skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+            std::cout << "Setting the skin!\n";
+            
+
+
+
+        });*/
+
+}
+
+
+//The big one
+//This is the function that is called to make a gladiator actually act
+//act_type is the type of action being performed (true = attack, false = support)
+//This will likely have a lot of bugs at the start! Hopefully they're fixed by the time anyone else sees this!
+void Act(bool act_type, Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7]) {
+
+    //Get info about gladiator
+    int xpos = glad.xpos;
+    int ypos = glad.ypos;
+
+    //The position of whoever will be targeted
+    int xtarg = 0;
+    int ytarg = 0;
+
+    //Figure out who is being targeted
+    //NOTE: this is not really random... consider fixing it if time allows
+
+    //0: DNE
+    //1: opp team
+    //2: same team
+    int sameteam = sameTeam(xpos, ypos, xpos + 1, ypos, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: act_type ? (xtarg = xpos + 1) : (false); act_type ? (ytarg = ypos) : (false); break;
+        case 2: act_type ? (false) : (xtarg = xpos + 1); act_type ? (false) : (ytarg = ypos); break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos - 1, ypos, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: act_type ? (xtarg = xpos - 1) : (false); act_type ? (ytarg = ypos) : (false); break;
+        case 2: act_type ? (false) : (xtarg = xpos - 1); act_type ? (false) : (ytarg = ypos); break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos, ypos + 1, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: act_type ? (xtarg = xpos) : (false); act_type ? (ytarg = ypos + 1) : (false); break;
+        case 2: act_type ? (false) : (xtarg = xpos); act_type ? (false) : (ytarg = ypos + 1); break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos, ypos - 1, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: act_type ? (xtarg = xpos) : (false); act_type ? (ytarg = ypos - 1) : (false); break;
+        case 2: act_type ? (false) : (xtarg = xpos); act_type ? (false) : (ytarg = ypos - 1); break;
+    }
+
+    //Great. Now we have the target!
+    if (act_type) {
+        std::cout << "This character will attack the gladiator at (" << xtarg << ", " << ytarg << ").\n";
+    }
+    else {
+        std::cout << "This character will support the gladiator at (" << xtarg << ", " << ytarg << ").\n";
+    }
+    
+
+}
+
 
 void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 {
@@ -653,6 +739,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            //We are in downtime. Switch to combat
            step = 0;
            phase = 1;
+           cur_actor = -1; //so that unselecting the enemy skin doesn't break things
            std::cout << "Phase: end downtime\n";
            
            //Create a new set of enemies
@@ -665,6 +752,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            //}
            
            //TODO: all of this
+           //probably make a new function
 
 
 
@@ -674,9 +762,13 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            switch (step) {
            case 0:
                {/*move ally*/
+               if (cur_actor != -1) {   //Unselect enemy skin
+                   selectSkin(0, 0, enemy_pieces[cur_actor]);
+               }
                    cur_actor = -1;
                    if (hasLiving(allies)) {
                        cur_actor = getNext(allies);
+                       selectSkin(1, 1, ally_pieces[cur_actor]);
                        allies[cur_actor].active = false;                            //Deactivate them; this is their turn.
                        int move[2];
                        bool valid_move = targetPos(move, board, allies[cur_actor].xpos, allies[cur_actor].ypos);
@@ -712,24 +804,19 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
                }
                if (act) {
-                   if (act_type) {
-                       std::cout << "Ally " << cur_actor << " should attack.\n";
-                       //TODO
-                   }
-                   else {
-                       std::cout << "Ally " << cur_actor << " should support.\n";
-                       //TODO
-                   }
+                   Act(act_type, allies[cur_actor], board, pieces);
                }
                step++;
                }
                break;
            case 2:
                {/*move enemy*/
+               selectSkin(1, 0, ally_pieces[cur_actor]);  //Unselect skin of previous ally
                std::cout << "Phase: move enemy\n";
                cur_actor = -1;
                if (hasLiving(enemies)) {
                    cur_actor = getNext(enemies);
+                   selectSkin(0, 1, enemy_pieces[cur_actor]); //Select skin for new actor
                    enemies[cur_actor].active = false;                            //Deactivate them; this is their turn.
                    int move[2];
                    bool valid_move = targetPos(move, board, enemies[cur_actor].xpos, enemies[cur_actor].ypos);
@@ -754,7 +841,19 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                {/*TODO: act enemy*/
                                         //NOTE: If I ever add an effect that would allow for movement to kill someone,
                                         //check if cur_actor is still alive here
-               std::cout << "Phase: act enemy " << cur_actor << "\n";
+               bool act_type = getFirstAction(enemies[cur_actor]);
+               int act_change = getFinalAction(act_type, enemies[cur_actor], board);
+               bool act = true;
+               switch (act_change) {
+                   //There is no valid action
+                   case 0: std::cout << "Enemy " << cur_actor << " has no valid targets.\n"; act = false; break;
+                   case 1: break; //Nothing needs to change
+                   case 2: act_type = !act_type; //Change to the other action type
+
+               }
+               if (act) {
+                   Act(act_type, enemies[cur_actor], board, pieces);
+               }
                step = 0;
                 }
                break;
