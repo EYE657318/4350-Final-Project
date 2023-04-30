@@ -151,138 +151,9 @@ bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is
             break;
         }
 
-        /*
-        //Get the ally's position on the board
-        int ally_x = allies[to_move].xpos;
-        int ally_y = allies[to_move].ypos;
-        //Where they plan to go
-        //(I have put defaults because the compiler was yelling at me, however it shouldn't be possible for the program to use them)
-        int ally_move_x = 0;
-        int ally_move_y = 0;
-        //Determine where to move
-        //Movement is biased towards moving closer to the center
-        if (ally_x - 3 < 0 && ally_y - 3 < 0) {
-            //biased to going positive in both directions
-            int random = rand() % 6;
-            switch (random) {
-            case 0:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 1:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 2:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            case 3:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            case 4:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 5:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            }
-        }
-        else if (ally_x - 3 < 0 && ally_y - 3 >= 0) {
-            //biased to going positive x,  negative y
-            int random = rand() % 6;
-            switch (random) {
-            case 0:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 1:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 2:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            case 3:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            case 4:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 5:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            }
-        }
-        else if (ally_x - 3 >= 0 && ally_y - 3 < 0) {
-            //biased to going negative x, positive y
-            int random = rand() % 6;
-            switch (random) {
-            case 0:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 1:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 2:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            case 3:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            case 4:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 5:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            }
-        }
-        else {
-            //TODO: biased to going negative in both directions
-            int random = rand() % 6;
-            switch (random) {
-            case 0:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 1:
-                ally_move_x = ally_x - 1;
-                ally_move_y = ally_y;
-                break;
-            case 2:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            case 3:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y - 1;
-                break;
-            case 4:
-                ally_move_x = ally_x + 1;
-                ally_move_y = ally_y;
-                break;
-            case 5:
-                ally_move_x = ally_x;
-                ally_move_y = ally_y + 1;
-                break;
-            }
-        }
+      
         
-        //The actual movement
+        /*//The actual movement
         if (board[ally_move_x][ally_move_y] != NULL) {
             tester.firstname = allies[to_move].firstname;
             tester.lastname = allies[to_move].lastname;
@@ -558,6 +429,31 @@ bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curpo
 
 }
 
+//This function is given a position and a gladiator, and moves the gladiator to that position
+//This must update the board of gladiators, the board of pieces, and the gladiator's variables
+//Maybe even more! Expect bugs from this for a long time. It's one of the trickier functions
+void movePiece(Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7], int newx, int newy, WO* p_board[7][7]) {
+    //TODO:
+    int xpos = glad.xpos;
+    int ypos = glad.ypos;
+
+    board[xpos][ypos] = NULL;
+
+    WO* piece = pieces[xpos][ypos];
+    pieces[xpos][ypos] = NULL;
+
+    board[newx][newy] = &glad;
+    glad.xpos = newx;
+    glad.ypos = newy;
+    
+    //set the new position on the pieces to the piece
+    pieces[newx][newy] = piece;
+    auto vec = p_board[newx][newy]->getPosition();
+    piece->setPosition(vec[0], vec[1], 4);
+
+
+}
+
 
 void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 {
@@ -574,13 +470,13 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            std::cout << "Phase: end downtime\n";
            
            //Create a new set of enemies
-           enemies.clear();
-           for (int i = 0; i < 5; i++) {
-               Gladiator newglad = Gladiator(1);
-               newglad.firstname = dub(nameList);
-               newglad.lastname = dub(nameList);
-               enemies.push_back(newglad);
-           }
+           //enemies.clear();
+           //for (int i = 0; i < 5; i++) {
+           //    Gladiator newglad = Gladiator(1);
+           //    newglad.firstname = dub(nameList);
+           //    newglad.lastname = dub(nameList);
+           //    enemies.push_back(newglad);
+           //}
            
            //TODO: all of this
 
@@ -601,6 +497,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        if (valid_move) {
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
                                ") should move to (" << move[0] << ", " << move[1] << ").\n";
+                           movePiece(allies[cur_actor], board, pieces, move[0], move[1], p_board);
                        }
                        else {
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
@@ -628,7 +525,17 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                if (hasLiving(enemies)) {
                    cur_actor = getNext(enemies);
                    enemies[cur_actor].active = false;                            //Deactivate them; this is their turn.
-                   std::cout << "Phase: move enemy " << cur_actor << "\n";
+                   int move[2];
+                   bool valid_move = targetPos(move, board, enemies[cur_actor].xpos, enemies[cur_actor].ypos);
+                   if (valid_move) {
+                       std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
+                           ") should move to (" << move[0] << ", " << move[1] << ").\n";
+                   }
+                   else {
+                       std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
+                           ") can't move to (" << move[0] << ", " << move[1] << ").\n";
+                   }
+                   //std::cout << "Phase: move enemy " << cur_actor << "\n";
                    step++;
                }
                else {
@@ -971,7 +878,18 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        }
    }
 
-   //TODO: enemy gladiator piece and assignment to board
+   //enemy gladiator piece and assignment to board
+   for (int i = 0; i < 5; i++) {
+       Gladiator newglad = Gladiator(1);
+       newglad.firstname = dub(nameList);
+       newglad.lastname = dub(nameList);
+       enemies.push_back(newglad);
+   }
+   for (int i = 0; i < 5; i++) {
+       board[6][6 - i] = &enemies[i];
+       enemies[i].xpos = 6;
+       enemies[i].ypos = 6 - i;
+   }
 
    for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
        board[0][i] = &allies[i];
