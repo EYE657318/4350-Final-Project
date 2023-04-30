@@ -60,6 +60,11 @@ public:
    //The gladiator who is currently being moved
    int cur_actor = -1;    
 
+   //Number of combats completed
+   int combats = 0;
+   //Number of turns in current combat
+   int turns = 0;
+
 protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );
    virtual void onCreate();   

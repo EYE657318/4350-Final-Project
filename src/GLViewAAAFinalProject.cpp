@@ -77,7 +77,9 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 "Rustica", "Rusticus", "Sabina", "Sagitta", "Salvia", "Samius", "Satyr", "Saturninus",
 "Sava", "Scodopordunicus", "Secundus", "Servilius", "Sittius", "Terentius", "Terminalis", "Tettius",
 "Theophilos", "Thetis", "Thymele", "Tiburtinus", "Titus", "Trebonius", "Tyche", "Valens", "Valentina",
-"Valeria", "Vatifon", "Veneria", "Venus", "Venuleius", "Vera", "Verecunnus", "Vibii", "Victor", "Zosimus", "Zeus" };
+"Valeria", "Vatifon", "Veneria", "Venus", "Venuleius", "Vera", "Verecunnus", "Vibii", "Victor", "Zosimus", "Zeus",
+//The following names were submitted by outside parties:
+"Natalie", "Noi", "Lotus"};
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
@@ -93,7 +95,7 @@ std::string dub(std::vector<std::string> nameList) {
 /////////////////////////////////////////////////////////////////
 //These functions are all out of date. Check for the new ones down by OnKeyPress
 
-bool GLViewAAAFinalProject::somethingMoves() {
+/*bool GLViewAAAFinalProject::somethingMoves() {
     //TODO: port moving code here. team-agnostic
     
     //consider returning index of ally acting
@@ -171,7 +173,7 @@ bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is
 
       
         
-        /*//The actual movement
+        /*The actual movement
         if (board[ally_move_x][ally_move_y] != NULL) {
             tester.firstname = allies[to_move].firstname;
             tester.lastname = allies[to_move].lastname;
@@ -202,14 +204,14 @@ bool GLViewAAAFinalProject::combatPhase() {               //The bool returned is
         ////Remove people if they are dead
 
         //TEMP FOR TESTING:
-        break;
+        /*break;
     }
     
     
     return players_lost;
-}
+}*/
 
-void GLViewAAAFinalProject::downtimePhase() {
+/*void GLViewAAAFinalProject::downtimePhase() {
     //////TODO: all of this
     //go through the vector of allies to turn UI on
     //??????
@@ -238,7 +240,7 @@ void GLViewAAAFinalProject::phaseHandler() {
         //TODO: you won!
     }
 
-}
+}*/
 
 
 GLViewAAAFinalProject::GLViewAAAFinalProject( const std::vector< std::string >& args ) : GLView( args )
@@ -686,6 +688,29 @@ void selectSkin(bool team, bool activate, WO* wo) {
 }
 
 ///////////////////////////////////////////////
+///////// Funcs important to actions///////////
+///////////////////////////////////////////////
+
+//Kills a gladiator
+//Also removes their pieces from the board
+void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7]) {
+
+    int xpos = glad->xpos;
+    int ypos = glad->ypos;
+
+    //unalive
+    glad->alive = false;
+    glad->active = false;
+
+    //remove from board
+    board[xpos][ypos] = NULL;
+    pieces[xpos][ypos]->setPosition(-100, -100, -100);
+    pieces[xpos][ypos] = NULL;
+
+}
+
+
+///////////////////////////////////////////////
 ////////////// ACTIONS ////////////////////////
 ///////////////////////////////////////////////
 //
@@ -707,8 +732,11 @@ void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int 
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
-
-        //TODO: test for death               
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces);
+        }
+                    
 
     }
     else {
@@ -834,6 +862,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            switch (step) {
            case 0:
                {/*move ally*/
+               turns++;
                if (cur_actor != -1) {   //Unselect enemy skin
                    selectSkin(0, 0, enemy_pieces[cur_actor]);
                }
@@ -883,6 +912,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                break;
            case 2:
                {/*move enemy*/
+               turns++;
                selectSkin(1, 0, ally_pieces[cur_actor]);  //Unselect skin of previous ally
                std::cout << "Phase: move enemy\n";
                cur_actor = -1;
