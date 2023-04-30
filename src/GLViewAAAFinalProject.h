@@ -39,7 +39,7 @@ public:
    ////Gladiator Stuff////
    ///////////////////////
    //ally gladiator vec
-   std::vector<Gladiator> allies;
+   std::vector<Gladiator> allies;              //In hindsight, these two shouldn't have been vectors. it's inconsistant
    //enemy gladiator vec
    std::vector<Gladiator> enemies;
    //the board (gladiator information)
@@ -48,6 +48,9 @@ public:
    WO* p_board[7][7];
    //the pieces (physical representation)
    WO* pieces[7][7];
+   //Individual pieces for each team (makes resetting the board easier)
+   WO* ally_pieces[5];
+   WO* enemy_pieces[5];
    //tester GUI (please stop being const
    TestGUI tester;
    

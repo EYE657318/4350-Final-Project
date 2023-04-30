@@ -281,6 +281,44 @@ void GLViewAAAFinalProject::onCreate()
                });
        }
    }
+   for (int i = 0; i < 5; i++) {
+       WO* piece1 = ally_pieces[i];
+       WO* piece2 = enemy_pieces[i];
+       piece1->upon_async_model_loaded([piece1]()
+           {
+               //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
+               //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
+               std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Ally.png");
+               auto found = the_skin.value();
+               ModelMeshSkin skin(found);
+               //skin.setShader()
+               //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
+               //oldSkin = skin;
+               skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+               piece1->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+
+
+
+           });
+       piece2->upon_async_model_loaded([piece2]()
+           {
+               //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
+               //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
+               std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Enemy.png");
+               auto found = the_skin.value();
+               ModelMeshSkin skin(found);
+               //skin.setShader()
+               //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
+               //oldSkin = skin;
+               skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+               piece2->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+
+
+
+           });
+   }
    
 
 }
@@ -1029,6 +1067,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        float x = vec[0]; float y = vec[1];
        wo->setPosition(x, y, 4);
        pieces[0][i] = wo;
+       ally_pieces[i] = wo;
        this->worldLst->push_back(wo);
    }
 
@@ -1038,6 +1077,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        float x = vec[0]; float y = vec[1];
        wo->setPosition(x, y, 4);
        pieces[6][6-i] = wo;
+       enemy_pieces[i] = wo;
        this->worldLst->push_back(wo);
    }
 
