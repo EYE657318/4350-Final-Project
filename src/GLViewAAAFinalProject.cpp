@@ -64,7 +64,20 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 "Apelles", "Antonius", "Apollodoru", "Bellicus", "Brutus", "Balbus", "Badius", "Caelus", "Caesar", "Caesia", "Callistus",
 "Camillus", "Capito", "Castus", "Catulus", "Ceius", "Celadus", "Cerdo", "Cerrinius", "Chius", "Chloe", "Coelius", "Conopis", 
 "Corus", "Communis", "Dadanus", "Duacus", "Drusus", "Dido", "December", "Danne", "Danaus", "Damoetas", "Ecidia", "Entellus", 
-"Eucinus", "Eros", "Epise", "Ephesus", "Euplia", "Epremus", "Elea"};
+"Eucinus", "Eros", "Epise", "Ephesus", "Euplia", "Epremus", "Elea", "Fabius", "Facilis", "Falax", "Fausta", "Faustilla", "Felicio", 
+"Felix", "Filetus", "Fortuna", "Florus", "Fronto", "Gallus", "Gemellus", "Genialis", "Glyco", "Gratus", "Hecticus", "Hector", 
+"Hedystus", "Helenus", "Heliodorus", "Herennius", "Hore", "Hostilius", "Hyginus", "Ianuaria", "Iarinus", "Iatacus",
+"Icarus", "Irene", "Iris", "Isidorus", "Isthmus", "Iucudus", "Iulius", "Iuma", "Iupiter", "Ladicula", "Latona", "Lenas", 
+"Lentulus", "Lepidus", "Lesbianus", "Libanis", "Litus", "Livia", "Lucida", "Lucilius", "Mago", "Marcellus", "Marianus", 
+"Marcus", "Marina", "Martha", "Mathia", "Medusa", "Megiste", "Menander", "Minius", "Modesta", "Mola", "Mugo", "Mus", 
+"Myrtilus", "Myrtis", "Mystis", "Narcissus", "Nauplis", "Neptunus", "Nero", "Nicerate", "Nicopolis",
+"Ninnius", "Nucerinus", "Nymphe", "Odysseus", "Octavius", "Oceanus", "Occasus", "Otho", "Oppius", "Pallade",
+"Palmyra", "Papirius", "Paris", "Pelagia", "Phileros", "Philippus", "Phoebe", "Phosphorus", "Pilades",
+"Quintio",  "Quartilla", "Quieta", "Rarus", "Remus", "Restituta", "Romulus", "Romula", "Rufilla",
+"Rustica", "Rusticus", "Sabina", "Sagitta", "Salvia", "Samius", "Satyr", "Saturninus",
+"Sava", "Scodopordunicus", "Secundus", "Servilius", "Sittius", "Terentius", "Terminalis", "Tettius",
+"Theophilos", "Thetis", "Thymele", "Tiburtinus", "Titus", "Trebonius", "Tyche", "Valens", "Valentina",
+"Valeria", "Vatifon", "Veneria", "Venus", "Venuleius", "Vera", "Verecunnus", "Vibii", "Victor", "Zosimus", "Zeus" };
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
