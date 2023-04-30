@@ -79,7 +79,7 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 "Theophilos", "Thetis", "Thymele", "Tiburtinus", "Titus", "Trebonius", "Tyche", "Valens", "Valentina",
 "Valeria", "Vatifon", "Veneria", "Venus", "Venuleius", "Vera", "Verecunnus", "Vibii", "Victor", "Zosimus", "Zeus",
 //The following names were submitted by outside parties:
-"Natalie", "Noi", "Lotus"};
+"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy"};
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
@@ -745,6 +745,95 @@ void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int 
     }
 }
 
+void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int damage = glad.curAtk - (board[xtarg][ytarg]->curDef / 2);
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 60 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator pierced for " << damage << " damage!\n";
+        //TODO: narration
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces);
+        }
+
+
+    }
+    else {
+        std::cout << "The gladiator missed! (pierce)\n";
+        //TODO: narration
+    }
+
+
+}
+
+void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 60 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator bonebroke for " << damage << " damage!\n";
+        //TODO: narration
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curDef -= 2;
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        //TODO: narration
+    }
+}
+
+void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 60 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator swordbroke for " << damage << " damage!\n";
+        //TODO: narration
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curAtk -= 1;
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        //TODO: narration
+    }
+
+}
 
 //The big one
 //This is the function that is called to make a gladiator actually act
@@ -810,9 +899,9 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         //OFFENSIVE ACTION: ATTACK
         //A normal attack. Calculates accuracy versus evade, and attack versus defense
         case Attack: skillAttack(glad, board, pieces, xtarg, ytarg); break;
-        case Pierce: {} break;
-        case Bonebreaker: {} break;
-        case Swordbreaker: {} break;
+        case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg); break;
+        case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg); break;
+        case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg); break;
         }
     
     
