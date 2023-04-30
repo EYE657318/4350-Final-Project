@@ -38,6 +38,7 @@
 #include "GladiatorGUI.h"
 #include "TestGUI.h"
 
+
 using namespace Aftr;
 
 GLViewAAAFinalProject* GLViewAAAFinalProject::New( const std::vector< std::string >& args )
@@ -74,6 +75,7 @@ std::string dub(std::vector<std::string> nameList) {
 /////////////////////////////////////////////////////////////////
 /////////////////// COMBAT STUFF ////////////////////////////////
 /////////////////////////////////////////////////////////////////
+//These functions are all out of date. Check for the new ones down by OnKeyPress
 
 bool GLViewAAAFinalProject::somethingMoves() {
     //TODO: port moving code here. team-agnostic
@@ -255,7 +257,30 @@ void GLViewAAAFinalProject::onCreate()
    }
    this->setActorChaseType( STANDARDEZNAV ); //Default is STANDARDEZNAV mode
    //this->setNumPhysicsStepsPerRender( 0 ); //pause physics engine on start up; will remain paused till set to 1
+   
+   //Skins are crashing, not sure why
+   for (int i = 0; i < 7; i++) {
+       for (int j = 0; j < 7; j++) {
+           WO* tile = p_board[i][j];
+           tile->upon_async_model_loaded([tile]()
+               {
+                   //ModelMeshSkin& oldSkin = woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0);
+                   //std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/bad_fire.png");
+                   std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered("../mm/images/skins/Marble.png");
+                   auto found = the_skin.value();
+                   ModelMeshSkin skin(found);
+                   //skin.setShader()
+                   //woSphere->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = found;
+                   //oldSkin = skin;
+                   skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
+                   tile->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+
+
+
+               });
+       }
+   }
    
 
 }
@@ -433,24 +458,147 @@ bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curpo
 //This must update the board of gladiators, the board of pieces, and the gladiator's variables
 //Maybe even more! Expect bugs from this for a long time. It's one of the trickier functions
 void movePiece(Gladiator &glad, Gladiator* (& board)[7][7], WO* (&pieces)[7][7], int newx, int newy, WO* (&p_board)[7][7]) {
-    //TODO:
+    //Important information
     int xpos = glad.xpos;
     int ypos = glad.ypos;
 
+    //Remomve the gladiator from the old position
     board[xpos][ypos] = NULL;
 
+    //Get the physical piece for the gladiator, then remove it
     WO* piece = pieces[xpos][ypos];
     pieces[xpos][ypos] = NULL;
 
+    //Put the gladiator in the new space
     board[newx][newy] = &glad;
     glad.xpos = newx;
     glad.ypos = newy;
     
-    //set the new position on the pieces to the piece
+    //put the piece in its new place
     pieces[newx][newy] = piece;
+
+    //Put the new piece in physical space
     auto vec = p_board[newx][newy]->getPosition();
     piece->setPosition(vec[0], vec[1], 4);
 
+
+}
+
+//This function takes a gladiator, then returns what type of action they will take based on their AI
+//true: attack
+//false: support
+bool getFirstAction(Gladiator glad) {
+
+    int random = rand() % 4;
+    AI ai = glad.ai;
+   
+    //No way in HELL am I nesting switch statements
+    if (ai == Offense) {
+        switch (random) {
+            case 0: return true;
+            case 1: return true;
+            case 2: return true;
+            case 3: return false;
+        }
+    }
+    else if (ai == Support) {
+        switch (random) {
+            case 0: return false;
+            case 1: return false;
+            case 2: return false;
+            case 3: return true;
+        }
+    }
+    else {
+        //Indecisive
+        switch (random) {
+            case 0: return true;
+            case 1: return true;
+            case 2: return false;
+            case 3: return false;
+        }
+
+    }
+
+    //This should never happen
+    return false;
+
+}
+
+//Checks if two gladiators are on the same team
+//0: the target does not exist
+//1: the target is of the opposite team
+//2: the target is of the same team;
+int sameTeam(int actorx, int actory, int targetx, int targety, Gladiator* board[7][7]) {
+    //Check for out of bonunds
+    if (targetx > 6 || targetx < 0 || targety > 6 || targety < 0) {
+        return 0;
+    }
+    //Check for empty space
+    if (board[targetx][targety] == NULL) {
+        //std::cout << "At" << targetx << ", " << targety << "is Null!!!\n";
+        return 0;
+    }
+    return board[actorx][actory]->team == board[targetx][targety]->team ? 2 : 1;
+}
+
+//This tests the previously selected action type against the board; is it actually possible?
+//Remember: true is attack, false is support.
+//Return values:
+//1: the originally selected action is valid. use that.
+//2: the originally selected action is not valid, but the opposite is. use that.
+//0: neither action is possible. don't act.
+int getFinalAction(bool first_act, Gladiator glad, Gladiator* board[7][7]) {
+
+    //NOTE: Right now, this only checks adjacency. if I make ranged skills, this can be expanded
+
+    bool has_ally = false;   //Is there an ally in range?
+    bool has_enemy = false;  //Is there an enemy in range?
+
+    int xpos = glad.xpos;
+    int ypos = glad.ypos;
+
+    //For future expansion:
+    // x = number of spaces of range (need to check everything <= x)
+    // i is a number 0..x
+    //[i][x-i]
+    //[i][-x+i]
+    //[-i][x-i]
+    //[-i][-x+i]
+    //there is probably a better way to do this^^^; it double counts every space
+
+    int sameteam = sameTeam(xpos, ypos, xpos+1, ypos, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: has_enemy = true; break;
+        case 2: has_ally = true; break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos - 1, ypos, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: has_enemy = true; break;
+        case 2: has_ally = true; break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos, ypos+1, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: has_enemy = true; break;
+        case 2: has_ally = true; break;
+    }
+    sameteam = sameTeam(xpos, ypos, xpos, ypos - 1, board);
+    switch (sameteam) {
+        case 0: break;
+        case 1: has_enemy = true; break;
+        case 2: has_ally = true; break;
+    }
+
+    switch (first_act) {
+        case true: return has_enemy ? 1 : (has_ally ? 2 : 0); break;
+        case false: return has_ally ? 1 : (has_enemy ? 2 : 0);  break;
+    }
+
+    //This shouldn't happen
+    return 0;
 
 }
 
@@ -487,7 +635,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
           //We are in combat.
            switch (step) {
            case 0:
-               {/*TODO: move ally*/
+               {/*move ally*/
                    cur_actor = -1;
                    if (hasLiving(allies)) {
                        cur_actor = getNext(allies);
@@ -507,6 +655,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    }
                    else {
                        std::cout << "All allies dead, none to move!\n";
+                       //TODO: end game
                    }
                }
                break;
@@ -514,12 +663,31 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                {/*TODO: act ally*/
                                         //NOTE: If I ever add an effect that would allow for movement to kill someone,
                                         //check if cur_actor is still alive here
-               std::cout << "Phase: act ally " << cur_actor << "\n";
+               bool act_type = getFirstAction(allies[cur_actor]);
+               int act_change = getFinalAction(act_type, allies[cur_actor], board);
+               bool act = true;
+               switch (act_change) {
+                   //There is no valid action
+                   case 0: std::cout << "Ally " << cur_actor << " has no valid targets.\n"; act = false; break; 
+                   case 1: break; //Nothing needs to change
+                   case 2: act_type = !act_type; //Change to the other action type
+
+               }
+               if (act) {
+                   if (act_type) {
+                       std::cout << "Ally " << cur_actor << " should attack.\n";
+                       //TODO
+                   }
+                   else {
+                       std::cout << "Ally " << cur_actor << " should support.\n";
+                       //TODO
+                   }
+               }
                step++;
                }
                break;
            case 2:
-               {/*TODO: move enemy*/
+               {/*move enemy*/
                std::cout << "Phase: move enemy\n";
                cur_actor = -1;
                if (hasLiving(enemies)) {
@@ -530,16 +698,17 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    if (valid_move) {
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") should move to (" << move[0] << ", " << move[1] << ").\n";
+                       movePiece(enemies[cur_actor], board, pieces, move[0], move[1], p_board);
                    }
                    else {
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") can't move to (" << move[0] << ", " << move[1] << ").\n";
                    }
-                   //std::cout << "Phase: move enemy " << cur_actor << "\n";
                    step++;
                }
                else {
-                   std::cout << "All allies dead, none to move!\n";
+                   std::cout << "All enemies dead, none to move!\n";
+                   //TODO: end battle
                }
                 }
                break;
@@ -843,8 +1012,9 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        });
    this->worldLst->push_back(gui);
 
+   //std::string marble = "../mm/images/skins/Marble.png";
 
-   for (int i = 0; i < 7; i++) {
+   for (int i = 0; i < 7; i++) {   //Create the board
        for (int j = 0; j < 7; j++) {
            WO* wo = WO::New(shinyRedPlasticCube, Vector(1, 1, 1), MESH_SHADING_TYPE::mstFLAT);
            wo->setPosition(4*i, 4*j, 0);
