@@ -432,7 +432,7 @@ bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curpo
 //This function is given a position and a gladiator, and moves the gladiator to that position
 //This must update the board of gladiators, the board of pieces, and the gladiator's variables
 //Maybe even more! Expect bugs from this for a long time. It's one of the trickier functions
-void movePiece(Gladiator glad, Gladiator* board[7][7], WO* pieces[7][7], int newx, int newy, WO* p_board[7][7]) {
+void movePiece(Gladiator &glad, Gladiator* (& board)[7][7], WO* (&pieces)[7][7], int newx, int newy, WO* (&p_board)[7][7]) {
     //TODO:
     int xpos = glad.xpos;
     int ypos = glad.ypos;
