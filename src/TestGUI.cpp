@@ -78,3 +78,94 @@
 		ImGui::Separator(); //draws bottom separator
 	}
 
+	void TestGUI::drawShop() {
+
+		
+
+		if (ImGui::TreeNode("Shop"))
+		{
+			if (shop_enabled) {
+
+				if (std::find(items.begin(), items.end(), 1) != items.end()) {
+					int cost = 10 + (gold/5);
+					
+					ImGui::Text("Offensive Skill: Pierce");
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy for " + glad.firstname + " " + glad.lastname;
+					ImGui::Text("Price: %d gold", cost);
+					if (ImGui::Button(name.c_str())) {
+						//TODO
+					}
+					ImGui::SameLine();
+					glad = (*allies)[1];
+					name = "Buy for " + glad.firstname + " " + glad.lastname;
+					if (ImGui::Button(name.c_str())) {
+						//TODO
+					}
+					ImGui::SameLine();
+					glad = (*allies)[2];
+					name = "Buy for " + glad.firstname + " " + glad.lastname;
+					if (ImGui::Button(name.c_str())) {
+						//TODO
+					}
+					ImGui::SameLine();
+					glad = (*allies)[3];
+					name = "Buy for " + glad.firstname + " " + glad.lastname;
+					if (ImGui::Button(name.c_str())) {
+						//TODO
+					}
+					ImGui::SameLine();
+					glad = (*allies)[4];
+					name = "Buy for " + glad.firstname + " " + glad.lastname;
+					if (ImGui::Button(name.c_str())) {
+						//TODO
+					}
+
+				}
+
+				if (std::find(items.begin(), items.end(), 2) != items.end()) {
+					ImGui::Text("Offensive Skill: Bonebreaker");
+				}
+
+				if (std::find(items.begin(), items.end(), 3) != items.end()) {
+					ImGui::Text("Offensive Skill: Swordbreaker");
+				}
+
+				if (std::find(items.begin(), items.end(), 4) != items.end()) {
+					ImGui::Text("Support Skill: Heal");
+				}
+
+				if (std::find(items.begin(), items.end(), 5) != items.end()) {
+					ImGui::Text("Support Skill: Train");
+				}
+
+				if (std::find(items.begin(), items.end(), 6) != items.end()) {
+					ImGui::Text("Stat Boost: Attack");
+				}
+
+				if (std::find(items.begin(), items.end(), 7) != items.end()) {
+					ImGui::Text("Stat Boost: Defense");
+				}
+
+				if (std::find(items.begin(), items.end(), 8) != items.end()) {
+					ImGui::Text("Stat Boost: Accuracy");
+				}
+
+				if (std::find(items.begin(), items.end(), 9) != items.end()) {
+					ImGui::Text("Stat Boost: Evade");
+				}
+
+				if (std::find(items.begin(), items.end(), 10) != items.end()) {
+					ImGui::Text("Stat Boost: Support");
+				}
+
+			}
+			else {
+				ImGui::Text("Shop not currently enabled.");
+			}
+
+			ImGui::TreePop();
+		}
+		ImGui::Separator();
+	}

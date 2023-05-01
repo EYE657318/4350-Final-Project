@@ -51,6 +51,9 @@ public:
    //Individual pieces for each team (makes resetting the board easier)
    WO* ally_pieces[5];
    WO* enemy_pieces[5];
+   //The portrait cubes that folow the main pieces
+   WO* a_portraits[5];
+   WO* e_portraits[5];
    //tester GUI (please stop being const
    TestGUI tester;
    
@@ -69,11 +72,6 @@ protected:
    GLViewAAAFinalProject( const std::vector< std::string >& args );
    virtual void onCreate();   
 
-   void downtimePhase();
-   bool combatPhase();
-   void phaseHandler();
-   bool somethingMoves();
-   bool somethingActs();
 
    //pacing control
    bool began = false;

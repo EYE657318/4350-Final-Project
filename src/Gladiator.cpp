@@ -28,9 +28,49 @@ Gladiator::Gladiator(int team) {
 	this->team = team;
 
 	//cosmetics
-	this->portrait = "../mm/images/portraits/Eyesack.png"; //TODO: actually randomize this
+	//this->portrait = "../mm/images/portraits/Eyesack.png";
 	//Names will be set seperately
 	this->personality = Warrior;   //TODO: actually randomize this
+
+	//randomize portrait
+	int random = rand() % 33;
+	switch (random) {
+	case 0: this->portrait = "../mm/images/portraits/Applejuice.png"; break;
+	case 1: this->portrait = "../mm/images/portraits/Beholding.png"; break;
+	case 2: this->portrait = "../mm/images/portraits/Belgarath.png"; break;
+	case 3: this->portrait = "../mm/images/portraits/Ojutai.png"; break;
+	case 4: this->portrait = "../mm/images/portraits/Bluevel.png"; break;
+	case 5: this->portrait = "../mm/images/portraits/Charles.png"; break;
+	case 6: this->portrait = "../mm/images/portraits/Contessa.png"; break;
+	case 7: this->portrait = "../mm/images/portraits/Cultist1.png"; break;
+	case 8: this->portrait = "../mm/images/portraits/Cultist2.png"; break;
+	case 9: this->portrait = "../mm/images/portraits/Cultist3.png"; break;
+	case 10: this->portrait = "../mm/images/portraits/Cultist4.png"; break;
+	case 11: this->portrait = "../mm/images/portraits/Dabe.png"; break;
+	case 12: this->portrait = "../mm/images/portraits/Dino.png"; break;
+	case 13: this->portrait = "../mm/images/portraits/Dong.png"; break;
+	case 14: this->portrait = "../mm/images/portraits/Eyesack.png"; break;
+	case 15: this->portrait = "../mm/images/portraits/Fire.png"; break;
+	case 16: this->portrait = "../mm/images/portraits/Golfballs.png"; break;
+	case 17: this->portrait = "../mm/images/portraits/GRIDa.png"; break;
+	case 18: this->portrait = "../mm/images/portraits/Hand.png"; break;
+	case 19: this->portrait = "../mm/images/portraits/Lin.png"; break;
+	case 20: this->portrait = "../mm/images/portraits/Moth.png"; break;
+	case 21: this->portrait = "../mm/images/portraits/Phantasm.png"; break;
+	case 22: this->portrait = "../mm/images/portraits/Pigeon.png"; break;
+	case 23: this->portrait = "../mm/images/portraits/Pirate.png"; break;
+	case 24: this->portrait = "../mm/images/portraits/Shrom.png"; break;
+	case 25: this->portrait = "../mm/images/portraits/Spinny.png"; break;
+	case 26: this->portrait = "../mm/images/portraits/Stabby.png"; break;
+	case 27: this->portrait = "../mm/images/portraits/Stauf.png"; break;
+	case 28: this->portrait = "../mm/images/portraits/Stev.png"; break;
+	case 29: this->portrait = "../mm/images/portraits/Sun.png"; break;
+	case 30: this->portrait = "../mm/images/portraits/Ted.png"; break;
+	case 31: this->portrait = "../mm/images/portraits/Waterlevel.png"; break;
+	case 32: this->portrait = "../mm/images/portraits/Sorren.png"; break;
+	}
+
+	std::cout << "the portrait is: " << portrait << "\n";
 
 }
 

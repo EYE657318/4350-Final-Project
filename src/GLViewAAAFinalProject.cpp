@@ -81,7 +81,7 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 //My pets
 "Houdini", "Alfredo", "Jack", "Bebe",
 //The following names were submitted by outside parties:
-"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy"};
+"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy", "Bobert", "Etheldredda"};
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
@@ -287,7 +287,44 @@ void GLViewAAAFinalProject::onCreate()
 
 
            });
+
+       ///Set the textures of the portrait cubes
+       WO* port1 = a_portraits[i];
+       WO* port2 = e_portraits[i];
+       Gladiator glad1 = allies[i];
+       Gladiator glad2 = enemies[i];
+       port1->upon_async_model_loaded([port1, glad1]()
+           {
+               std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(glad1.portrait);
+       auto found = the_skin.value();
+       ModelMeshSkin skin(found);
+       skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+       port1->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+
+
+
+           });
+       port2->upon_async_model_loaded([port2, glad2]()
+           {
+               std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(glad2.portrait);
+       auto found = the_skin.value();
+       ModelMeshSkin skin(found);
+       skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+       port2->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+
+
+
+           });
+
+       auto vec1 = ally_pieces[i]->getPosition();
+       auto vec2 = enemy_pieces[i]->getPosition();
+       port1->setPosition(vec1[0], vec1[1], vec1[2]+1.5);
+       port2->setPosition(vec2[0], vec2[1], vec2[2]+1.5);
    }
+
+
    
 
 }
@@ -835,7 +872,7 @@ void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int x
     //This one isn't increased by support -- that would be too broken
     //It also doesn't increase the current stat -- this is long-term only!
     std::cout << "The gladiator trained the target in attack\n";
-    board[xtarg][ytarg]->curAtk ++;
+    board[xtarg][ytarg]->baseAtk ++;
     //TODO: narration
 
 }
@@ -1074,7 +1111,14 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
        }
       
-       //Problems with figuring out how to wait for stuff before, so new plan:
+        //Make sure the portrait cubes are still properly attached
+       for (int i = 0; i < 5; i++) {
+           auto vec1 = ally_pieces[i]->getPosition();
+           auto vec2 = enemy_pieces[i]->getPosition();
+           a_portraits[i]->setPosition(vec1[0], vec1[1], vec1[2] + 1.5);
+           e_portraits[i]->setPosition(vec2[0], vec2[1], vec2[2] + 1.5);
+       }
+
        //Spacebar is the "do next thing" button.
        //We will keep track of what "phase" (combat/downtime) we are on and what "step" (movement/action) we are on
        //
@@ -1122,7 +1166,8 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    std::vector< std::string > skyBoxImageNames; //vector to store texture paths
    //skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/sky_water+6.jpg" );
    //skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/sky_dust+6.jpg" );
-   skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/sky_mountains+6.jpg" );
+   skyBoxImageNames.push_back( "../mm/images/skins/RomeSkybox.png" );
+   //skyBoxImageNames.push_back("../mm/images/Park3/park3.png");
    //skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/sky_winter+6.jpg" );
    //skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/early_morning+6.jpg" );
    //skyBoxImageNames.push_back( ManagerEnvironmentConfiguration::getSMM() + "/images/skyboxes/sky_afternoon+6.jpg" );
@@ -1171,7 +1216,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
    { 
       ////Create the infinite grass plane (the floor)
-      WO* wo = WO::New( grass, Vector( 1, 1, 1 ), MESH_SHADING_TYPE::mstFLAT );
+      /*WO* wo = WO::New(grass, Vector(1, 1, 1), MESH_SHADING_TYPE::mstFLAT);
       wo->setPosition( Vector( 0, 0, 0 ) );
       wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
       wo->upon_async_model_loaded( [wo]()
@@ -1184,7 +1229,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
             grassSkin.setSpecularCoefficient( 10 ); // How "sharp" are the specular highlights (bigger is sharper, 1000 is very sharp, 10 is very dull)
          } );
       wo->setLabel( "Grass" );
-      worldLst->push_back( wo );
+      worldLst->push_back( wo );*/
    }
 
    //{
@@ -1206,72 +1251,6 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    //   wo->getModel()->getModelDataShared()->getModelMeshes().at( 0 )->getSkins().at( 0 ).getMultiTextureSet().at( 0 )->setTextureRepeats( 5.0f );
    //   wo->setLabel( "Grass" );
    //   worldLst->push_back( wo );
-   //}
-
-   //{
-   //   //Create the infinite grass plane (the floor)
-   //   WO* wo = WONVPhysX::New( shinyRedPlasticCube, Vector( 1, 1, 1 ), MESH_SHADING_TYPE::mstFLAT );
-   //   wo->setPosition( Vector( 0, 0, 50.0f ) );
-   //   wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
-   //   wo->setLabel( "Grass" );
-   //   worldLst->push_back( wo );
-   //}
-
-   //{
-   //   WO* wo = WONVPhysX::New( shinyRedPlasticCube, Vector( 1, 1, 1 ), MESH_SHADING_TYPE::mstFLAT );
-   //   wo->setPosition( Vector( 0, 0.5f, 75.0f ) );
-   //   wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
-   //   wo->setLabel( "Grass" );
-   //   worldLst->push_back( wo );
-   //}
-
-   //{
-   //   WO* wo = WONVDynSphere::New( ManagerEnvironmentConfiguration::getVariableValue( "sharedmultimediapath" ) + "/models/sphereRp5.wrl", Vector( 1.0f, 1.0f, 1.0f ), mstSMOOTH );
-   //   wo->setPosition( 0, 0, 100.0f );
-   //   wo->setLabel( "Sphere" );
-   //   this->worldLst->push_back( wo );
-   //}
-
-   //{
-   //   WO* wo = WOHumanCal3DPaladin::New( Vector( .5, 1, 1 ), 100 );
-   //   ((WOHumanCal3DPaladin*)wo)->rayIsDrawn = false; //hide the "leg ray"
-   //   ((WOHumanCal3DPaladin*)wo)->isVisible = false; //hide the Bounding Shell
-   //   wo->setPosition( Vector( 20, 20, 20 ) );
-   //   wo->setLabel( "Paladin" );
-   //   worldLst->push_back( wo );
-   //   actorLst->push_back( wo );
-   //   netLst->push_back( wo );
-   //   this->setActor( wo );
-   //}
-   //
-   //{
-   //   WO* wo = WOHumanCyborg::New( Vector( .5, 1.25, 1 ), 100 );
-   //   wo->setPosition( Vector( 20, 10, 20 ) );
-   //   wo->isVisible = false; //hide the WOHuman's bounding box
-   //   ((WOHuman*)wo)->rayIsDrawn = false; //show the 'leg' ray
-   //   wo->setLabel( "Human Cyborg" );
-   //   worldLst->push_back( wo );
-   //   actorLst->push_back( wo ); //Push the WOHuman as an actor
-   //   netLst->push_back( wo );
-   //   this->setActor( wo ); //Start module where human is the actor
-   //}
-
-   //{
-   //   //Create and insert the WOWheeledVehicle
-   //   std::vector< std::string > wheels;
-   //   std::string wheelStr( "../../../shared/mm/models/WOCar1970sBeaterTire.wrl" );
-   //   wheels.push_back( wheelStr );
-   //   wheels.push_back( wheelStr );
-   //   wheels.push_back( wheelStr );
-   //   wheels.push_back( wheelStr );
-   //   WO* wo = WOCar1970sBeater::New( "../../../shared/mm/models/WOCar1970sBeater.wrl", wheels );
-   //   wo->setPosition( Vector( 5, -15, 20 ) );
-   //   wo->setLabel( "Car 1970s Beater" );
-   //   ((WOODE*)wo)->mass = 200;
-   //   worldLst->push_back( wo );
-   //   actorLst->push_back( wo );
-   //   this->setActor( wo );
-   //   netLst->push_back( wo );
    //}
    
    //Make a Dear Im Gui instance via the WOImGui in the engine... This calls
@@ -1323,6 +1302,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
    tester = TestGUI();//TestGUI(board, p_board, pieces, allies, enemies);
    TestGUI* tester2 = &tester;
+   tester2->allies = &allies;
    //std::vector<TestGUI> unmutable;
    //unmutable.push_back(tester);
 
@@ -1349,8 +1329,9 @@ void Aftr::GLViewAAAFinalProject::loadMap()
            glad3->my_ImGui_draw_method();
            glad4->my_ImGui_draw_method();
            //TestGUI* tester2 = &unmutable[0];
-           tester2->drawMover();
+           //tester2->drawMover();
            tester2->drawCombat();
+           tester2->drawShop();
  
 
        });
@@ -1413,6 +1394,15 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        allies[i].ypos = i;
    }
 
+   for (int i = 0; i < 5; i++) {
+       WO* wo = WO::New(shinyRedPlasticCube, Vector(0.3, 0.3, 0.3), MESH_SHADING_TYPE::mstFLAT);
+       WO* wo2 = WO::New(shinyRedPlasticCube, Vector(0.3, 0.3, 0.3), MESH_SHADING_TYPE::mstFLAT);
+       a_portraits[i] = wo;
+       e_portraits[i] = wo2;
+       this->worldLst->push_back(wo);
+       this->worldLst->push_back(wo2);
+   }
+
 
 
    createAAAFinalProjectWayPoints();
@@ -1422,13 +1412,18 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 }
 
 //TODO list:
-//1. Combat <------ the big one
-//2. Shop
+//1. Shop
+//2. Structuring rounds
+//3. Narration UI
+//4. Final boss/more structured enemy teams
+//5. Sounds
 
 //Misc:
-//textures, models, skubox
-//get portraits to actually work
-//more names
+//portrait cube, skybox
+//description of portrait on gladiators?
+//some signal of enemy HP?
+//more skills and personalities
+
 
 
 
@@ -1436,11 +1431,11 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 void GLViewAAAFinalProject::createAAAFinalProjectWayPoints()
 {
    // Create a waypoint with a radius of 3, a frequency of 5 seconds, activated by GLView's camera, and is visible.
-   WayPointParametersBase params(this);
+   /*WayPointParametersBase params(this);
    params.frequency = 5000;
    params.useCamera = true;
    params.visible = true;
    WOWayPointSpherical* wayPt = WOWayPointSpherical::New( params, 3 );
    wayPt->setPosition( Vector( 50, 0, 3 ) );
-   worldLst->push_back( wayPt );
+   worldLst->push_back( wayPt );*/
 }
