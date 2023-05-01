@@ -72,6 +72,15 @@ Gladiator::Gladiator(int team) {
 
 	std::cout << "the portrait is: " << portrait << "\n";
 
+	//Randomize personality
+	random = rand() % 4;
+	switch (random) {
+		case 0: personality = Warrior; break;
+		case 1: personality = Fearful; break;
+		case 2: personality = Excited; break;
+		case 3: personality = Quiet; break;
+	}
+
 }
 
 Gladiator::Gladiator(int hp, int atk, int def, int sup, int acc, int ev, int team) {
@@ -256,7 +265,7 @@ std::string Gladiator::D_IncreaseHP() {
 	switch (this->personality) {
 	case Warrior:
 		return "''May life's struggles never wear me down.''";
-		break;
+		break;       //Why did I put break after all these??? They return????
 	case Fearful:
 		return "''You're not going to let them hit me, right? ...Right?''";
 		break;
@@ -393,12 +402,152 @@ std::string Gladiator::D_IncreaseFail() {
 		return "''A shame.''";
 		break;
 	default:
-		return "ERROR: D_IncreaseFail not implemented for this personality type!''";
+		return "ERROR: D_IncreaseFail not implemented for this personality type!";
 		break;
 
 	}
 }
 
+std::string Gladiator::D_AttackHit() {
+	switch (this->personality) {
+	case Warrior:
+		return "''Strike back, if you dare.''";
+	case Fearful:
+		return "''Wait, wait! It was an accident, I swear!''";
+	case Excited:
+		return "''Do you think the head would be a better target?''";
+	case Quiet:
+		return "''...''";
+	default: return "ERROR: D_AttackHit not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_AttackMiss() {
+	switch (this->personality) {
+	case Warrior:
+		return "''There is always a chance of failure.''";
+	case Fearful:
+		return "''I sure hope the didn't notice that...''";
+	case Excited:
+		return "''Next time for sure!''";
+	case Quiet:
+		return "''...Ergh.''";
+	default:
+		return "ERROR: D_AttackMiss not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_SupportUse() {
+	switch (this->personality) {
+	case Warrior:
+		return "''Fight onward!''";
+	case Fearful:
+		return "''The enemy's that way! I'll just stay here.''";
+	case Excited:
+		return "''Go get 'em!''";
+	case Quiet:
+		return "''...Good luck.''";
+	default:
+		return "''ERROR: D_SupportUse not implemented for this personality type!''";
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_Death() {
+	switch (this->personality) {
+	case Warrior:
+		return "''I fall.... today....''";
+	case Fearful:
+		return "''No...''";
+	case Excited:
+		return "''Damn... too soon...''";
+	case Quiet:
+		return "''......''";
+	default:
+		return "ERROR: D_Death not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_LearnOffenseSkill() {
+	switch (this->personality) {
+	case Warrior:
+		return "''Another weapon in my arsenal.''";
+	case Fearful:
+		return "''So can I stand, like... farther away?''";
+	case Excited:
+		return "''A shame I have lose the old one.''";
+	case Quiet:
+		return "''You're making this too complicated.''";
+	default:
+		return "ERROR: D_LearnOffenseSkill not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_LearnSupportSkill() {
+	switch (this->personality) {
+	case Warrior:
+		return "''I will assist where needed.''";
+	case Fearful:
+		return "''Backline work! Yay!''";
+	case Excited:
+		return "''Yeah, I can use this!''";
+	case Quiet:
+		return "''...Whatever.''";
+	default:
+		return "ERROR: D_LearnSupportSkill not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_MoveSuccess() {
+	switch (this->personality) {
+	case Warrior:
+		return "''Ever onward.''";
+	case Fearful:
+		return "''Run away! Run away!''";
+	case Excited:
+		return "''Wheeeeee!!''";
+	case Quiet:
+		return "''...''";
+	default:
+		return "ERROR: D_MoveSuccess not implemented for this personality type!";
+
+	}
+
+	return "???";
+}
+
+std::string Gladiator::D_MoveFail() {
+	switch (this->personality) {
+	case Warrior:
+		return "''I must remain patient.''";
+	case Fearful:
+		return "''Please, let me out of here!''";
+	case Excited:
+		return "''Out of my way, out of my way!''";
+	case Quiet:
+		return "''...Move.''";
+	default:
+		return "ERROR: D_MoveFail not implemented for this personality type!";
+
+	}
+	return "???";
+}
 //dialogue template
 /*std::string Gladiator::D_IncreaseAtk() {
 	switch (this->personality) {

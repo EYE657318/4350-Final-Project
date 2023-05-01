@@ -56,20 +56,19 @@
 			if (combatEnabled) {
 
 
-				if (ImGui::Button("Next!")) {
-					next = true;
+				for (int i = 0; i < text.size(); i++) {
+					ImGui::Text(text[i].c_str());
 				}
 
-				ImGui::Text("%s %s %s", firstname.c_str(), lastname.c_str(), narration.c_str());
-				ImGui::Text("%s %s says: %s", firstname.c_str(), lastname.c_str(), dialogue.c_str());
+				ImGui::Text(dialogue.c_str());
 
-			}else {
+			} else {
 				ImGui::Text("Combat GUI not enabled right now!");
-				if (ImGui::Button("Start Combat")) {
-					combatEnabled = true;
+				//if (ImGui::Button("Start Combat")) {
+				//	combatEnabled = true;
 					//GLViewAAAFinalProject* glv = ManagerGLView::getGLViewT<GLViewAssignment6Networking>();
 					//glv->changeCube(this->posX, this->posY, this->posZ, this->locX, this->locY, this->locZ, this->skin)
-				}
+				//}
 			}
 
 

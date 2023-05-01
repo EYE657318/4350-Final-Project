@@ -18,12 +18,16 @@
 		TestGUI();
 		bool to_move = false;
 		bool next = false;
-		bool combatEnabled = false;
+		bool combatEnabled = true;
 
 		//narration is commentary on what has just happened
 		//dialogue is what the ally gladiator has to say about it
+		//VESTIGIAL
 		std::string narration;
+		//STILL USED
 		std::string dialogue;
+		//NEW; holds everything that needs to be printed EXCEPT for what the gladiator says
+		std::vector<std::string> text;
 
 		//these are the names of the character currently speaking
 		std::string firstname;

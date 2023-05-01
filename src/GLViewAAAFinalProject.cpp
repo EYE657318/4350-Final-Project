@@ -59,7 +59,9 @@ GLViewAAAFinalProject* GLViewAAAFinalProject::New( const std::vector< std::strin
 //This is the list of names used to generate gladiator names.
 //It makes no distinction between first and last names. 
 //This is to emphasize the strangeness of this world.
-std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios", "Aegyptus", "Aemilius", "Africana", "Africanus",
+std::vector<std::string> nameList = { 
+//    https://mariamilani.com/ancient_rome/roman_names.htm
+"Achilles",  "Acrates", "Actius", "Adonios", "Aegyptus", "Aemilius", "Africana", "Africanus",
 "Ajax", "Albanus", "Alexander", "Amandus", "Amethystus", "Amianthus", "Amor", "Ampliatus", "Anicetus", "Andromeda",
 "Apelles", "Antonius", "Apollodoru", "Bellicus", "Brutus", "Balbus", "Badius", "Caelus", "Caesar", "Caesia", "Callistus",
 "Camillus", "Capito", "Castus", "Catulus", "Ceius", "Celadus", "Cerdo", "Cerrinius", "Chius", "Chloe", "Coelius", "Conopis", 
@@ -81,7 +83,9 @@ std::vector<std::string> nameList = { "Achilles",  "Acrates", "Actius", "Adonios
 //My pets
 "Houdini", "Alfredo", "Jack", "Bebe",
 //The following names were submitted by outside parties:
-"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy", "Bobert", "Etheldredda"};
+"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy",/*why would you do this, Connor*/ "Bobert", "Etheldredda",
+//Other:
+"Vindex"};
 
 //Picks a name from the provided list
 std::string dub(std::vector<std::string> nameList) {
@@ -501,7 +505,7 @@ bool targetPos(int (&targets)[2], Gladiator* board[7][7], int curposx, int curpo
 //This function is given a position and a gladiator, and moves the gladiator to that position
 //This must update the board of gladiators, the board of pieces, and the gladiator's variables
 //Maybe even more! Expect bugs from this for a long time. It's one of the trickier functions
-void movePiece(Gladiator &glad, Gladiator* (& board)[7][7], WO* (&pieces)[7][7], int newx, int newy, WO* (&p_board)[7][7]) {
+void movePiece(Gladiator &glad, Gladiator* (& board)[7][7], WO* (&pieces)[7][7], int newx, int newy, WO* (&p_board)[7][7], TestGUI &tester) {
     //Important information
     int xpos = glad.xpos;
     int ypos = glad.ypos;
@@ -524,6 +528,13 @@ void movePiece(Gladiator &glad, Gladiator* (& board)[7][7], WO* (&pieces)[7][7],
     //Put the new piece in physical space
     auto vec = p_board[newx][newy]->getPosition();
     piece->setPosition(vec[0], vec[1], 4);
+
+    //Create text
+    std::string narration = board[newx][newy]->firstname + " " + board[newx][newy]->lastname + " moved to space (" + 
+        std::to_string(newx) + ", " + std::to_string(newy) + ").";
+    tester.text.push_back(narration);
+    std::string dialogue = board[newx][newy]->firstname + " " + board[newx][newy]->lastname + " says: " + glad.D_MoveSuccess();
+    tester.dialogue = dialogue;
 
 
 }
@@ -696,7 +707,7 @@ void selectSkin(bool team, bool activate, WO* wo) {
 
 //Kills a gladiator
 //Also removes their pieces from the board
-void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7]) {
+void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester) {
 
     int xpos = glad->xpos;
     int ypos = glad->ypos;
@@ -710,6 +721,11 @@ void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7]) {
     pieces[xpos][ypos]->setPosition(-100, -100, -100);
     pieces[xpos][ypos] = NULL;
 
+    std::string narration = glad->firstname + " " + glad->lastname + " died!";
+    tester.text.push_back(narration);
+    std::string dialogue = glad->firstname + " " + glad->lastname + " says: " + glad->D_Death();
+    tester.dialogue = dialogue;
+
 }
 
 
@@ -720,7 +736,7 @@ void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7]) {
 // Each of these functions corresponds to one offensive or support skill
 //
 
-void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI &tester) {
 
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
@@ -731,24 +747,31 @@ void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int 
     if (accroll > accuracy) { hit = false; }
     if (hit) {
         std::cout << "The gladiator hit for " << damage << " damage!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " attacked " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester);
         }
                     
 
     }
     else {
         std::cout << "The gladiator missed!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their attack!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
     }
 }
 
-void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     int damage = glad.curAtk - (board[xtarg][ytarg]->curDef / 2);
     if (damage <= 0) { damage = 1; }
@@ -759,26 +782,33 @@ void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int 
     if (accroll > accuracy) { hit = false; }
     if (hit) {
         std::cout << "The gladiator pierced for " << damage << " damage!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " pierced " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester);
         }
 
 
     }
     else {
         std::cout << "The gladiator missed! (pierce)\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their pierce!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
     }
 
 
 }
 
-void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
@@ -789,14 +819,18 @@ void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7],
     if (accroll > accuracy) { hit = false; }
     if (hit) {
         std::cout << "The gladiator bonebroke for " << damage << " damage!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " bonebroke " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         board[xtarg][ytarg]->curDef -= 2;
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester);
         }
 
 
@@ -804,11 +838,14 @@ void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7],
     }
     else {
         std::cout << "The gladiator missed!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their bonebreaker!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
     }
 }
 
-void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
     int accuracy = 60 + glad.curAcc - board[xtarg][ytarg]->curEv;
@@ -818,14 +855,18 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
     if (accroll > accuracy) { hit = false; }
     if (hit) {
         std::cout << "The gladiator swordbroke for " << damage << " damage!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " swordbroke " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         board[xtarg][ytarg]->curAtk -= 1;
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester);
         }
 
 
@@ -833,12 +874,15 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
     }
     else {
         std::cout << "The gladiator missed!\n";
-        //TODO: narration
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their swordbreaker!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
     }
 
 }
 
-void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     int heal = 3 + (glad.curSup / 5);
     std::cout << "The gladiator healed for " << heal << " health \n";
@@ -846,34 +890,50 @@ void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xt
     if (board[xtarg][ytarg]->curHP > board[xtarg][ytarg]->maxHP) {
         board[xtarg][ytarg]->curHP = board[xtarg][ytarg]->maxHP;
     }
-    //TODO: narration
+    std::string narration = glad.firstname + " " + glad.lastname + " used Heal on " + board[xtarg][ytarg]->firstname + " " + 
+        board[xtarg][ytarg]->lastname + ".";
+    tester.text.push_back(narration);
+    std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
+    tester.dialogue = dialogue;
 }
 
-void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     int inspire = 1 + (glad.curSup / 10);
     std::cout << "The gladiator inspired for " << inspire << " attack \n";
     board[xtarg][ytarg]->curAtk += inspire;
-    //TODO: narration
+    std::string narration = glad.firstname + " " + glad.lastname + " used Inspire on " + board[xtarg][ytarg]->firstname + " " +
+        board[xtarg][ytarg]->lastname + ".";
+    tester.text.push_back(narration);
+    std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
+    tester.dialogue = dialogue;
 
 }
 
-void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     int resolve = 1 + (glad.curSup / 10);
     std::cout << "The gladiator resolved for " << resolve << " defense \n";
     board[xtarg][ytarg]->curDef += resolve;
-    //TODO: narration
+    std::string narration = glad.firstname + " " + glad.lastname + " used Resolve on " + board[xtarg][ytarg]->firstname + " " +
+       board[xtarg][ytarg]->lastname + ".";
+    tester.text.push_back(narration);
+    std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
+    tester.dialogue = dialogue;
 
 }
 
-void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg) {
+void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
 
     //This one isn't increased by support -- that would be too broken
     //It also doesn't increase the current stat -- this is long-term only!
     std::cout << "The gladiator trained the target in attack\n";
     board[xtarg][ytarg]->baseAtk ++;
-    //TODO: narration
+    std::string narration = glad.firstname + " " + glad.lastname + " used Train on " + board[xtarg][ytarg]->firstname + " " +
+        board[xtarg][ytarg]->lastname + ".";
+    tester.text.push_back(narration);
+    std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
+    tester.dialogue = dialogue;
 
 }
 
@@ -881,7 +941,7 @@ void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int x
 //This is the function that is called to make a gladiator actually act
 //act_type is the type of action being performed (true = attack, false = support)
 //This will likely have a lot of bugs at the start! Hopefully they're fixed by the time anyone else sees this!
-void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7]) {
+void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester) {
 
     //Get info about gladiator
     int xpos = glad.xpos;
@@ -940,13 +1000,13 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         switch (action) {                                               //Maybe to random generation/shop depending
         //OFFENSIVE ACTION: ATTACK
         //A normal attack. Calculates accuracy versus evade, and attack versus defense
-        case Attack: skillAttack(glad, board, pieces, xtarg, ytarg); break;
+        case Attack: skillAttack(glad, board, pieces, xtarg, ytarg, tester); break;
         //Only takes half of the target's defense into account. -10 accuracy
-        case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg); break;
+        case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg, tester); break;
         //Reduces the target's defense by 2 for the rest of combat. -10 accuracy
-        case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg); break;
+        case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg, tester); break;
         //Reduces the target's attack by 1 for the rest of combat. -10 accuracy
-        case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg); break;
+        case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg, tester); break;
         //Uh oh, you forgot to implement something!
         default: std::cout << "This skill hasn't been implemented yet!\n";
         }
@@ -957,10 +1017,10 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         int random = rand() % 2;
         SupSkill action = (random == 0) ? glad.sup1 : glad.sup2;
         switch (action) {
-        case Heal: skillHeal(glad, board, pieces, xtarg, ytarg);  break;
-        case Inspire: skillInspire(glad, board, pieces, xtarg, ytarg); break;
-        case Resolve: skillResolve(glad, board, pieces, xtarg, ytarg);  break;
-        case Train: skillTrain(glad, board, pieces, xtarg, ytarg);  break;
+        case Heal: skillHeal(glad, board, pieces, xtarg, ytarg, tester);  break;
+        case Inspire: skillInspire(glad, board, pieces, xtarg, ytarg, tester); break;
+        case Resolve: skillResolve(glad, board, pieces, xtarg, ytarg, tester);  break;
+        case Train: skillTrain(glad, board, pieces, xtarg, ytarg, tester);  break;
         }
     
     
@@ -1005,6 +1065,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            case 0:
                {/*move ally*/
                turns++;
+               tester.text.clear();
                if (cur_actor != -1) {   //Unselect enemy skin
                    selectSkin(0, 0, enemy_pieces[cur_actor]);
                }
@@ -1018,11 +1079,18 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        if (valid_move) {
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
                                ") should move to (" << move[0] << ", " << move[1] << ").\n";
-                           movePiece(allies[cur_actor], board, pieces, move[0], move[1], p_board);
+                           movePiece(allies[cur_actor], board, pieces, move[0], move[1], p_board, tester);
                        }
                        else {
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
                                ") can't move to (" << move[0] << ", " << move[1] << ").\n";
+                           std::string narration = allies[cur_actor].firstname + " " + allies[cur_actor].lastname +
+                               "tried to move to space (" + std::to_string(move[0]) + ", " +
+                               std::to_string(move[1]) + "), but it was occupied!";
+                           tester.text.push_back(narration);
+                           std::string dialogue = allies[cur_actor].firstname + " " + allies[cur_actor].lastname + 
+                               " says: " + allies[cur_actor].D_MoveFail();
+                           tester.dialogue = dialogue;
                        }
                        step++;
                    }
@@ -1039,15 +1107,19 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                bool act_type = getFirstAction(allies[cur_actor]);
                int act_change = getFinalAction(act_type, allies[cur_actor], board);
                bool act = true;
+               tester.text.clear();
                switch (act_change) {
                    //There is no valid action
-                   case 0: std::cout << "Ally " << cur_actor << " has no valid targets.\n"; act = false; break; 
+               case 0: std::cout << "Ally " << cur_actor << " has no valid targets.\n"; act = false; {
+                   std::string narration = allies[cur_actor].firstname + " " + allies[cur_actor].lastname + " has no valid targets.";
+                   tester.text.push_back(narration);
+                   }break;
                    case 1: break; //Nothing needs to change
                    case 2: act_type = !act_type; //Change to the other action type
 
                }
                if (act) {
-                   Act(act_type, allies[cur_actor], board, pieces);
+                   Act(act_type, allies[cur_actor], board, pieces, tester);
                }
                step++;
                }
@@ -1055,6 +1127,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            case 2:
                {/*move enemy*/
                turns++;
+               tester.text.clear();
                selectSkin(1, 0, ally_pieces[cur_actor]);  //Unselect skin of previous ally
                std::cout << "Phase: move enemy\n";
                cur_actor = -1;
@@ -1067,11 +1140,18 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    if (valid_move) {
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") should move to (" << move[0] << ", " << move[1] << ").\n";
-                       movePiece(enemies[cur_actor], board, pieces, move[0], move[1], p_board);
+                       movePiece(enemies[cur_actor], board, pieces, move[0], move[1], p_board, tester);
                    }
                    else {
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") can't move to (" << move[0] << ", " << move[1] << ").\n";
+                       std::string narration = enemies[cur_actor].firstname + " " + enemies[cur_actor].lastname +
+                           "tried to move to space (" + std::to_string(move[0]) + ", " +
+                           std::to_string(move[1]) + "), but it was occupied!";
+                       tester.text.push_back(narration);
+                       std::string dialogue = enemies[cur_actor].firstname + " " + enemies[cur_actor].lastname +
+                           " says: " + enemies[cur_actor].D_MoveFail();
+                       tester.dialogue = dialogue;
                    }
                    step++;
                }
@@ -1088,15 +1168,21 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                bool act_type = getFirstAction(enemies[cur_actor]);
                int act_change = getFinalAction(act_type, enemies[cur_actor], board);
                bool act = true;
+               tester.text.clear();
                switch (act_change) {
                    //There is no valid action
-                   case 0: std::cout << "Enemy " << cur_actor << " has no valid targets.\n"; act = false; break;
+               case 0: std::cout << "Enemy " << cur_actor << " has no valid targets.\n"; act = false; {
+                   {
+                       std::string narration = enemies[cur_actor].firstname + " " + enemies[cur_actor].lastname + 
+                           " has no valid targets."; tester.text.push_back(narration);
+                   }
+                   }break;
                    case 1: break; //Nothing needs to change
                    case 2: act_type = !act_type; //Change to the other action type
 
                }
                if (act) {
-                   Act(act_type, enemies[cur_actor], board, pieces);
+                   Act(act_type, enemies[cur_actor], board, pieces, tester);
                }
                step = 0;
                 }

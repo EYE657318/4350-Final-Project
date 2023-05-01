@@ -162,6 +162,14 @@ class Gladiator {
 		std::string D_IncreaseAcc();
 		std::string D_IncreaseEv();
 		std::string D_IncreaseFail();
+		std::string D_AttackHit();
+		std::string D_AttackMiss();
+		std::string D_SupportUse();
+		std::string D_Death();
+		std::string D_LearnOffenseSkill();
+		std::string D_LearnSupportSkill();
+		std::string D_MoveSuccess();
+		std::string D_MoveFail();
 
 
 };
