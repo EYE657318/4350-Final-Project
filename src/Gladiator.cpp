@@ -117,17 +117,45 @@ void Gladiator::my_ImGui_draw_method() {
 			if (gui_enabled) {
 				ImGui::Text("GLADIATOR INFORMATION");
 
-
-				//TODO: image stuff ImGui::Image();
 				ImGui::Text("%s %s", firstname.c_str(), lastname.c_str());
 				//Personality is hidden information
 				//AI is hidden information           //TODO: since this is strategically relevant, consider changing this
 
-				if (ImGui::Button("KILL (test)")) {
+				/*if (ImGui::Button("KILL (test)")) {
 					active = false;
 					alive = false;
+				}*/
+				switch (off1) {
+				case 0:ImGui::Text("Skill 1: Attack"); break;
+				case 1:ImGui::Text("Skill 1: Pierce"); break;
+				case 2:ImGui::Text("Skill 1: Bonebreaker"); break;
+				case 3:ImGui::Text("Skill 1: Swordbreaker"); break;
+				default: ImGui::Text("Error! Skill %d does not have a display case", off1); break;
 				}
-				ImGui::Text("Life status: %d and %d", active, alive);
+				switch (off2) {
+				case 0:ImGui::Text("Skill 2: Attack"); break;
+				case 1:ImGui::Text("Skill 2: Pierce"); break;
+				case 2:ImGui::Text("Skill 2: Bonebreaker"); break;
+				case 3:ImGui::Text("Skill 2: Swordbreaker"); break;
+				default: ImGui::Text("Error! Skill %d does not have a display case", off2); break;
+				}
+				switch (sup1) {
+				case 0:ImGui::Text("Support 1: Heal"); break;
+				case 1:ImGui::Text("Support 1: Inspire"); break;
+				case 2:ImGui::Text("Support 1: Resolve"); break;
+				case 3:ImGui::Text("Support 1: Train"); break;
+				default: ImGui::Text("Error! Skill %d does not have a display case", sup1); break;
+				}
+				switch (sup2) {
+				case 0:ImGui::Text("Support 2: Heal"); break;
+				case 1:ImGui::Text("Support 2: Inspire"); break;
+				case 2:ImGui::Text("Support 2: Resolve"); break;
+				case 3:ImGui::Text("Support 2: Train"); break;
+				default: ImGui::Text("Error! Skill %d does not have a display case", sup2); break;
+				}
+				
+
+				ImGui::Text("Active: %d, Alive: %d", active, alive);
 
 				ImGui::Text("Upgrade points: %d", points);
 

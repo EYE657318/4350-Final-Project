@@ -38,7 +38,7 @@
 		std::vector<Gladiator>* allies;
 
 		//gold!
-		int gold = 10;
+		int gold = 2000;
 
 	protected:
 		/*Gladiator* board[7][7];

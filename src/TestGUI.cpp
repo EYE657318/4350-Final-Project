@@ -84,80 +84,439 @@
 
 		if (ImGui::TreeNode("Shop"))
 		{
+
+			ImGui::Text("[Current Gold: %d]", gold);
+
 			if (shop_enabled) {
 
+				//Shope for: Pierce
 				if (std::find(items.begin(), items.end(), 1) != items.end()) {
 					int cost = 10 + (gold/5);
 					
-					ImGui::Text("Offensive Skill: Pierce");
+					ImGui::Text("***Offensive Skill: Pierce***");
+					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
-					std::string name = "Buy for " + glad.firstname + " " + glad.lastname;
-					ImGui::Text("Price: %d gold", cost);
-					if (ImGui::Button(name.c_str())) {
-						//TODO
-					}
-					ImGui::SameLine();
-					glad = (*allies)[1];
-					name = "Buy for " + glad.firstname + " " + glad.lastname;
-					if (ImGui::Button(name.c_str())) {
-						//TODO
-					}
-					ImGui::SameLine();
-					glad = (*allies)[2];
-					name = "Buy for " + glad.firstname + " " + glad.lastname;
-					if (ImGui::Button(name.c_str())) {
-						//TODO
-					}
-					ImGui::SameLine();
-					glad = (*allies)[3];
-					name = "Buy for " + glad.firstname + " " + glad.lastname;
-					if (ImGui::Button(name.c_str())) {
-						//TODO
-					}
-					ImGui::SameLine();
-					glad = (*allies)[4];
-					name = "Buy for " + glad.firstname + " " + glad.lastname;
-					if (ImGui::Button(name.c_str())) {
-						//TODO
+					std::string name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
+					
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].off2 = Pierce;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].off2 = Pierce;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].off2 = Pierce;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].off2 = Pierce;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].off2 = Pierce;
+							gold -= cost;
+						}
 					}
 
 				}
 
 				if (std::find(items.begin(), items.end(), 2) != items.end()) {
-					ImGui::Text("Offensive Skill: Bonebreaker");
+					int cost = 10 + (gold / 5);
+					ImGui::Text("***Offensive Skill: Bonebreaker***");
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].off2 = Bonebreaker;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].off2 = Bonebreaker;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].off2 = Bonebreaker;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].off2 = Bonebreaker;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].off2 = Bonebreaker;
+							gold -= cost;
+						}
+					}
+					
 				}
 
 				if (std::find(items.begin(), items.end(), 3) != items.end()) {
-					ImGui::Text("Offensive Skill: Swordbreaker");
+					int cost = 10 + (gold / 5);
+					ImGui::Text("***Offensive Skill: Swordbreaker***");
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].off2 = Swordbreaker;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].off2 = Swordbreaker;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].off2 = Swordbreaker;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].off2 = Swordbreaker;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].off2 = Swordbreaker;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 4) != items.end()) {
-					ImGui::Text("Support Skill: Heal");
+					int cost = 10 + (gold / 4);
+					ImGui::Text("***Support Skill: Heal***");
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].sup2 = Heal;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].sup2 = Heal;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].sup2 = Heal;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].sup2 = Heal;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].sup2 = Heal;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 5) != items.end()) {
-					ImGui::Text("Support Skill: Train");
+					int cost = 20 + (gold / 3);
+					ImGui::Text("***Support Skill: Train***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Train for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].sup2 = Train;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].sup2 = Train;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].sup2 = Train;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].sup2 = Train;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].sup2 = Train;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 6) != items.end()) {
-					ImGui::Text("Stat Boost: Attack");
+					int cost = 6 + (gold / 10);
+					ImGui::Text("***Stat Boost: Attack***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].baseAtk += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].baseAtk += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].baseAtk += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].baseAtk += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].baseAtk += 2;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 7) != items.end()) {
-					ImGui::Text("Stat Boost: Defense");
+					int cost = 6 + (gold / 10);
+					ImGui::Text("***Stat Boost: Defense***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].baseDef += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].baseDef += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].baseDef += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].baseDef += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].baseDef += 2;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 8) != items.end()) {
-					ImGui::Text("Stat Boost: Accuracy");
+					int cost = 6 + (gold / 10);
+					ImGui::Text("***Stat Boost: Accuracy***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].baseAcc += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].baseAcc += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].baseAcc += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].baseAcc += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].baseAcc += 2;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 9) != items.end()) {
-					ImGui::Text("Stat Boost: Evade");
+					int cost = 6 + (gold / 10);
+					ImGui::Text("***Stat Boost: Evade***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].baseEv += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].baseEv += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].baseEv += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].baseEv += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].baseEv += 2;
+							gold -= cost;
+						}
+					}
 				}
 
 				if (std::find(items.begin(), items.end(), 10) != items.end()) {
-					ImGui::Text("Stat Boost: Support");
+					int cost = 6 + (gold / 10);
+					ImGui::Text("***Stat Boost: Support***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Support for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].baseSup += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].baseSup += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[2];
+						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].baseSup += 2;
+							gold -= cost;
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].baseSup += 2;
+							gold -= cost;
+						}
+						glad = (*allies)[4];
+						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].baseSup += 2;
+							gold -= cost;
+						}
+					}
 				}
 
 			}
@@ -169,3 +528,37 @@
 		}
 		ImGui::Separator();
 	}
+
+
+	/*ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							//TODO: code
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							//TODO: code
+						}
+						glad = (*allies)[2];
+						name = "Buy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							//TODO: code
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							//TODO: code
+						}
+						glad = (*allies)[4];
+						name = "Buy for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							//TODO: code
+						}
+					}*/
