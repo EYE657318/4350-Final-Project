@@ -1052,8 +1052,9 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                //
 
                tester.items.clear();
-               tester.items.push_back(rand() % 11);
-
+               for (int i = 0; i < 5; i++) {
+                   tester.items.push_back(rand() % 11);
+               }
                combats++;
 
                //reset board
