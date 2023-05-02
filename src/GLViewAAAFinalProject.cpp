@@ -83,7 +83,8 @@ std::vector<std::string> nameList = {
 //My pets
 "Houdini", "Alfredo", "Jack", "Bebe",
 //The following names were submitted by outside parties:
-"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy",/*why would you do this, Connor*/ "Bobert", "Etheldredda",
+"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy",/*why would you do this, Connor*/ 
+"Bobert", "Etheldredda", "Herbacious",
 //Other:
 "Vindex"};
 
@@ -121,10 +122,10 @@ std::string dub(std::vector<std::string> nameList) {
    // }
    // tester.next = false;
 
-    //TODO: create the enemies (put it before we get enemies.size())
+  
     
     while (true){
-        //////TODO: all of this
+        
 
         ////
         ////  AN ALLY MOVES
@@ -171,7 +172,7 @@ std::string dub(std::vector<std::string> nameList) {
             tester.firstname = allies[to_move].firstname;
             tester.lastname = allies[to_move].lastname;
             tester.narration = "encountered a problem trying to move to their chosen space.";
-            //TODO: dialogue
+            
         }
         else {
             tester.firstname = allies[to_move].firstname;
@@ -204,10 +205,10 @@ std::string dub(std::vector<std::string> nameList) {
     }
 
     if (lost) {
-        //TODO: you lost!
+       
     }
     else {
-        //TODO: you won!
+  
     }
 
 }*/
@@ -1050,7 +1051,8 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                //DO SETUP FOR COMBAT
                //
 
-               //TODO: re-randomize shop
+               tester.items.clear();
+               tester.items.push_back(rand() % 11);
 
                combats++;
 
@@ -1068,7 +1070,17 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    newglad.firstname = dub(nameList);
                    newglad.lastname = dub(nameList);
                    enemies.push_back(newglad);
-                   //TODO: update portrait cubes
+                   WO* wo = e_portraits[i];
+                   std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(newglad.portrait);
+                   auto found = the_skin.value();
+                   ModelMeshSkin skin(found);
+                   skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+                   wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+                   /*wo->upon_async_model_loaded([wo, newglad]()
+                       {
+                           
+                       });*/
                }
                for (int i = 0; i < 5; i++) {
                    board[6][6 - i] = &enemies[i];
@@ -1158,7 +1170,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                }
                break;
            case 1:
-               {/*TODO: act ally*/
+               {/*act ally*/
                                         //NOTE: If I ever add an effect that would allow for movement to kill someone,
                                         //check if cur_actor is still alive here
                bool act_type = getFirstAction(allies[cur_actor]);
@@ -1215,7 +1227,6 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                else {
                    std::cout << "All enemies dead, none to move!\n";
                    
-                   //TODO: END COMBAT
                    phase = 0;
                    step = 0;
                    for (int i = 0; i < 5; i++) {
@@ -1224,7 +1235,17 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                            newglad.firstname = dub(nameList);
                            newglad.lastname = dub(nameList);
                            allies[i] = newglad;
-                           //TODO: update portrait cube
+                           WO* wo = a_portraits[i];
+                           std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(newglad.portrait);
+                           auto found = the_skin.value();
+                           ModelMeshSkin skin(found);
+                           skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+                           wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+                           /*wo->upon_async_model_loaded([wo, newglad]()
+                               {
+                                   
+                               });*/
                         }
                        allies[i].points += 5;
                        allies[i].upgrade_enabled = true;
@@ -1236,7 +1257,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                 }
                break;
            case 3:
-               {/*TODO: act enemy*/
+               {/*act enemy*/
                                         //NOTE: If I ever add an effect that would allow for movement to kill someone,
                                         //check if cur_actor is still alive here
                bool act_type = getFirstAction(enemies[cur_actor]);
@@ -1419,7 +1440,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    //the default Dear ImGui demo that shows all the features... To create your own,
    //inherit from WOImGui and override WOImGui::drawImGui_for_this_frame(...) (among any others you need).
    // 
-   // TODO: look closer at this, because apparently I'm gonna need to figure out subscribe_drawImGuiWidget
+  
    // 
    //WOImGui* gui = WOImGui::New( nullptr );
    //gui->setLabel( "My Gui" );
@@ -1574,16 +1595,10 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 }
 
 //TODO list:
-//1. Shop
-//2. Structuring rounds
-//3. Narration UI
-//4. Final boss/more structured enemy teams
-//5. Sounds
+//1. Final boss/more structured enemy teams
+//2. Sounds
 
 //Misc:
-//portrait cube, skybox
-//description of portrait on gladiators?
-//some signal of enemy HP?
 //more skills and personalities
 
 
