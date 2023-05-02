@@ -63,6 +63,7 @@
 				ImGui::Text(dialogue.c_str());
 
 			} else {
+				ImGui::Text("You just finished round: %d", combats);
 				ImGui::Text("Combat GUI not enabled right now!");
 				ImGui::Text("To prevent you accidentally skipping past this phase, \nyou must press the button below to continue");
 				ImGui::Text("Then, you may press spacebar to start combat!");

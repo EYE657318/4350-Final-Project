@@ -1413,18 +1413,23 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    enemies[0].firstname = "Lupin"; enemies[0].lastname = "Rubrum"; enemies[0].portrait = "../mm/images/portraits/LupinRed.png";
                    enemies[0].baseAtk += 10; enemies[0].baseDef += 10; enemies[0].baseAcc += 10; enemies[0].baseEv += 10; enemies[0].curHP += 10;
                    enemies[0].off1 = AttackMaul; enemies[0].off2 = AttackMaul; enemies[0].sup1 = Inspire; enemies[0].sup2 = Inspire;
+                   enemies[0].personality = Wolf;
                    enemies[1].firstname = "Lupin"; enemies[1].lastname = "Caeruleum"; enemies[1].portrait = "../mm/images/portraits/LupinBlue.png";
                    enemies[1].baseAtk += 10; enemies[1].baseDef += 10; enemies[1].baseAcc += 10; enemies[1].baseEv += 10; enemies[1].curHP += 10;
                    enemies[1].off1 = DefenseMaul; enemies[1].off2 = DefenseMaul; enemies[1].sup1 = Inspire; enemies[1].sup2 = Inspire;
+                   enemies[1].personality = Wolf;
                    enemies[2].firstname = "God-Emperor"; enemies[2].lastname = "Augustus"; enemies[2].portrait = "../mm/images/portraits/Augustus.png";
                    enemies[2].baseAtk += 13; enemies[2].baseDef += 15; enemies[2].baseAcc += 20; enemies[2].baseEv += 10; enemies[2].curHP += 25;
                    enemies[2].off1 = DeificBlast; enemies[2].off2 = DeificBlast; enemies[2].sup1 = Inspire; enemies[2].sup2 = Inspire;
-                   enemies[3].firstname = "Lupin"; enemies[3].lastname = "Viridis"; enemies[3].portrait = "../mm/images/portraits/LupinYellow.png";
+                   enemies[2].personality = GodEmperor;
+                   enemies[3].firstname = "Lupin"; enemies[3].lastname = "Flavum"; enemies[3].portrait = "../mm/images/portraits/LupinYellow.png";
                    enemies[3].baseAtk += 10; enemies[3].baseDef += 10; enemies[3].baseAcc += 10; enemies[3].baseEv += 10; enemies[3].curHP += 10;
                    enemies[3].off1 = AccuracyMaul; enemies[3].off2 = AccuracyMaul; enemies[3].sup1 = Inspire; enemies[3].sup2 = Inspire;
-                   enemies[4].firstname = "Lupin"; enemies[4].lastname = "Flavum"; enemies[4].portrait = "../mm/images/portraits/LupinGreen.png";
+                   enemies[3].personality = Wolf;
+                   enemies[4].firstname = "Lupin"; enemies[4].lastname = "Viridis"; enemies[4].portrait = "../mm/images/portraits/LupinGreen.png";
                    enemies[4].baseAtk += 10; enemies[4].baseDef += 10; enemies[4].baseAcc += 10; enemies[4].baseEv += 10; enemies[4].curHP += 10;
                    enemies[4].off1 = EvadeMaul; enemies[4].off2 = EvadeMaul; enemies[4].sup1 = Inspire; enemies[4].sup2 = Inspire;
+                   enemies[4].personality = Wolf;
                    for (int i = 0; i < 5; i++) {
                        WO* wo = e_portraits[i];
                        std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(enemies[i].portrait);
@@ -1450,10 +1455,16 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
                        wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
-                       /*wo->upon_async_model_loaded([wo, newglad]()
-                           {
-
-                           });*/
+                       
+                       //Increase some random stats based on how many combats have passed
+                       int random = rand() % 5;
+                       switch (random) {
+                       case 0: newglad.baseAtk += combats; newglad.curAtk += combats; break;
+                       case 1: newglad.baseDef += combats; newglad.curDef += combats; break;
+                       case 2: newglad.baseAcc += (combats * 2); newglad.curAcc += (combats * 2); break;
+                       case 3: newglad.baseEv += (combats * 2); newglad.curEv += (combats * 2); break;
+                       case 4: newglad.maxHP += (combats + 5); newglad.curHP += (combats + 5); break;
+                       }
                    }
                }
 
@@ -1646,6 +1657,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
                        worldLst->push_back(wo);
                    }
+                   tester.combats = combats;
                }
                 }
                break;
@@ -1803,7 +1815,8 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    ////////////////////////////////
 
    engine = irrklang::createIrrKlangDevice();
-   //backgroundSound = engine->play2D("../mm/sounds/crowd.wav", true, false, true);
+   backgroundSound = engine->play2D("../mm/sounds/crowd.wav", true, false, true);
+   backgroundSound->setVolume(0.5);
 
    //////////////////////////////////
    ////////// NOT SOUND STUFF ///////
@@ -1840,6 +1853,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    TestGUI* tester2 = &tester;
    tester2->allies = &allies;
    tester.engine = engine;
+   tester.combats = combats;
    //std::vector<TestGUI> unmutable;
    //unmutable.push_back(tester);
 

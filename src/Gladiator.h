@@ -48,6 +48,9 @@ enum Personality {
 	Fearful,
 	Excited,
 	Quiet,
+	//// ENEMY ONLY ////
+	GodEmperor,
+	Wolf,
 };
 
 ///////////////////////////////////////////

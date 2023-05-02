@@ -18,11 +18,11 @@ Gladiator::Gladiator(int team) {
 
 	///Defaults (set individually if something different is desired)
 	this->off1 = Attack;
-	this->off2 = Attack;      //TODO: consider randomizing the second offensive skill
-	this->sup1 = Inspire;     //TODO: consider randomizing both support skills
+	this->off2 = Attack;      
+	this->sup1 = Inspire;     
 	this->sup2 = Resolve;
-	this->ai = Indecisive;    //TODO: consider randomizing ai
-	this->personality = Warrior;   //TODO: DEFINITELY randomize this
+	this->ai = Indecisive;    
+	this->personality = Warrior;  //This is randomized later 
 
 	//The team
 	this->team = team;
@@ -30,7 +30,7 @@ Gladiator::Gladiator(int team) {
 	//cosmetics
 	//this->portrait = "../mm/images/portraits/Eyesack.png";
 	//Names will be set seperately
-	this->personality = Warrior;   //TODO: actually randomize this
+	this->personality = Warrior;   
 
 	//randomize portrait
 	int random = rand() % 33;
@@ -121,6 +121,9 @@ Gladiator::Gladiator(int hp, int atk, int def, int sup, int acc, int ev, int tea
 //////////////////////////////////////
 void Gladiator::my_ImGui_draw_method() {
 		std::string truename = firstname + " " + lastname;
+		if (!alive) {
+			truename = truename + " (deceased)";
+		}
 		if (ImGui::TreeNode(truename.c_str()))
 		{
 			if (gui_enabled) {
@@ -134,6 +137,12 @@ void Gladiator::my_ImGui_draw_method() {
 					active = false;
 					alive = false;
 				}*/
+				switch (ai) {
+				case Indecisive: ImGui::Text("AI: Indecisive"); break;
+				case Offense: ImGui::Text("AI: Offensive"); break;
+				case Support: ImGui::Text("AI: Support"); break;
+				}
+
 				switch (off1) {
 				case 0:ImGui::Text("Skill 1: Attack"); break;
 				case 1:ImGui::Text("Skill 1: Pierce"); break;
@@ -440,6 +449,10 @@ std::string Gladiator::D_AttackHit() {
 		return "''Do you think the head would be a better target?''";
 	case Quiet:
 		return "''...''";
+	case GodEmperor: 
+		return "''PERISH!''";
+	case Wolf:
+		return "''Grrrr... grahhkk!''";
 	default: return "ERROR: D_AttackHit not implemented for this personality type!";
 
 	}
@@ -457,6 +470,10 @@ std::string Gladiator::D_AttackMiss() {
 		return "''Next time for sure!''";
 	case Quiet:
 		return "''...Ergh.''";
+	case GodEmperor: 
+		return "''YOUR FATE IS INEVITABLE.''";
+	case Wolf:
+		return "''Mrghhhh... grah...''";
 	default:
 		return "ERROR: D_AttackMiss not implemented for this personality type!";
 
@@ -475,6 +492,10 @@ std::string Gladiator::D_SupportUse() {
 		return "''Go get 'em!''";
 	case Quiet:
 		return "''...Good luck.''";
+	case GodEmperor:
+		return "''Destroy them, soldier!''";
+	case Wolf:
+		return "''Grakh! Grakh!''";
 	default:
 		return "''ERROR: D_SupportUse not implemented for this personality type!''";
 	}
@@ -492,6 +513,10 @@ std::string Gladiator::D_Death() {
 		return "''Damn... too soon...''";
 	case Quiet:
 		return "''......''";
+	case GodEmperor:
+		return "''No...! Usupers...!''";
+	case Wolf:
+		return "''Whihhhhnnnk...''";
 	default:
 		return "ERROR: D_Death not implemented for this personality type!";
 
@@ -546,6 +571,10 @@ std::string Gladiator::D_MoveSuccess() {
 		return "''Wheeeeee!!''";
 	case Quiet:
 		return "''...''";
+	case GodEmperor:
+		return "''We march. To victory!''";
+	case Wolf:
+		return "''Rahhhrk! Rahhhrk!''";
 	default:
 		return "ERROR: D_MoveSuccess not implemented for this personality type!";
 
@@ -564,6 +593,10 @@ std::string Gladiator::D_MoveFail() {
 		return "''Out of my way, out of my way!''";
 	case Quiet:
 		return "''...Move.''";
+	case GodEmperor:
+		return "''You are out of position. Move!''";
+	case Wolf:
+		return "''Grrrr......''";
 	default:
 		return "ERROR: D_MoveFail not implemented for this personality type!";
 

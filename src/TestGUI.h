@@ -52,6 +52,9 @@
 		void PlayPurchase();
 		irrklang::ISoundEngine* engine;
 
+		//combats!
+		int combats;
+
 	protected:
 		/*Gladiator* board[7][7];
 		Aftr::WO* p_board[7][7];
