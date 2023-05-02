@@ -1142,26 +1142,55 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    }
                }
 
-               //enemy gladiator piece and assignment to board
-               enemies.clear();
-               for (int i = 0; i < 5; i++) {
-                   Gladiator newglad = Gladiator(1);
-                   newglad.engine = engine;
-                   newglad.firstname = dub(nameList);
-                   newglad.lastname = dub(nameList);
-                   enemies.push_back(newglad);
-                   WO* wo = e_portraits[i];
-                   std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(newglad.portrait);
-                   auto found = the_skin.value();
-                   ModelMeshSkin skin(found);
-                   skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
 
-                   wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
-                   /*wo->upon_async_model_loaded([wo, newglad]()
-                       {
-                           
-                       });*/
+               //enemy gladiator piece and assignment to board
+               if (combats == 10) {
+                   enemies.clear();
+                   for (int i = 0; i < 5; i++) {
+                       Gladiator newglad = Gladiator(1);
+                       newglad.engine = engine;
+                       //newglad.firstname = dub(nameList);
+                       //newglad.lastname = dub(nameList);
+                       enemies.push_back(newglad);
+
+                   }
+                   enemies[0].firstname = "Lupin"; enemies[0].lastname = "Rubrum"; enemies[0].portrait = "../mm/images/portraits/LupinRed.png";
+                   enemies[1].firstname = "Lupin"; enemies[1].lastname = "Caeruleum"; enemies[1].portrait = "../mm/images/portraits/LupinBlue.png";
+                   enemies[2].firstname = "God-Emperor"; enemies[2].lastname = "Augustus"; enemies[2].portrait = "../mm/images/portraits/Augustus.png";
+                   enemies[3].firstname = "Lupin"; enemies[3].lastname = "Viridis"; enemies[3].portrait = "../mm/images/portraits/LupinYellow.png";
+                   enemies[4].firstname = "Lupin"; enemies[4].lastname = "Flavum"; enemies[4].portrait = "../mm/images/portraits/LupinGreen.png";
+                   for (int i = 0; i < 5; i++) {
+                       WO* wo = e_portraits[i];
+                       std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(enemies[i].portrait);
+                       auto found = the_skin.value();
+                       ModelMeshSkin skin(found);
+                       skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+                       wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+                   }
                }
+               else {
+                   enemies.clear();
+                   for (int i = 0; i < 5; i++) {
+                       Gladiator newglad = Gladiator(1);
+                       newglad.engine = engine;
+                       newglad.firstname = dub(nameList);
+                       newglad.lastname = dub(nameList);
+                       enemies.push_back(newglad);
+                       WO* wo = e_portraits[i];
+                       std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(newglad.portrait);
+                       auto found = the_skin.value();
+                       ModelMeshSkin skin(found);
+                       skin.setMeshShadingType(MESH_SHADING_TYPE::mstSMOOTH);
+
+                       wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0) = std::move(skin);
+                       /*wo->upon_async_model_loaded([wo, newglad]()
+                           {
+
+                           });*/
+                   }
+               }
+
                for (int i = 0; i < 5; i++) {
                    board[6][6 - i] = &enemies[i];
                    enemies[i].xpos = 6;
@@ -1229,6 +1258,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
                                ") should move to (" << move[0] << ", " << move[1] << ").\n";
                            movePiece(allies[cur_actor], board, pieces, move[0], move[1], p_board, tester);
+                           irrklang::ISound* s = engine->play2D("../mm/sounds/Move.wav");
                        }
                        else {
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
@@ -1295,6 +1325,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") should move to (" << move[0] << ", " << move[1] << ").\n";
                        movePiece(enemies[cur_actor], board, pieces, move[0], move[1], p_board, tester);
+                       irrklang::ISound* s = engine->play2D("../mm/sounds/Move.wav");
                    }
                    else {
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
@@ -1656,6 +1687,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
 //TODO list:
 //1. Final boss/more structured enemy teams
+//2. AI shop options
 
 //Misc:
 //more skills and personalities
