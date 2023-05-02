@@ -37,6 +37,11 @@
 #include "Gladiator.h"
 #include "GladiatorGUI.h"
 #include "TestGUI.h"
+//I put it in the cmake, but it's still not finding it, so here's the path:
+//Literally the same as it was in the original sound project!
+#include "../include/irrklang/irrKlang.h"
+//#include "irrKlang.h"
+
 
 
 using namespace Aftr;
@@ -83,7 +88,7 @@ std::vector<std::string> nameList = {
 //My pets
 "Houdini", "Alfredo", "Jack", "Bebe",
 //The following names were submitted by outside parties:
-"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy",/*why would you do this, Connor*/ 
+"Natalie", "Noi", "Lotus", "Iggy", "Bartholomew", "Taylor", "Daddy",/*why would you do this, Connor?*/ 
 "Bobert", "Etheldredda", "Herbacious",
 //Other:
 "Vindex"};
@@ -708,7 +713,7 @@ void selectSkin(bool team, bool activate, WO* wo) {
 
 //Kills a gladiator
 //Also removes their pieces from the board
-void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester) {
+void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester, irrklang::ISoundEngine* engine) {
 
     int xpos = glad->xpos;
     int ypos = glad->ypos;
@@ -727,6 +732,11 @@ void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7], Te
     std::string dialogue = glad->firstname + " " + glad->lastname + " says: " + glad->D_Death();
     tester.dialogue = dialogue;
 
+    //Sound stuff //
+    //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Shatter.wav");
+    //End sound stuff //
+
 }
 
 
@@ -737,7 +747,7 @@ void killGladiator(Gladiator* glad, Gladiator* board[7][7], WO* pieces[7][7], Te
 // Each of these functions corresponds to one offensive or support skill
 //
 
-void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI &tester) {
+void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI &tester, irrklang::ISoundEngine* engine) {
 
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
@@ -756,10 +766,20 @@ void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int 
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        //End sound stuff //
+
+
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces, tester);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
         }
+
+        
                     
 
     }
@@ -769,10 +789,15 @@ void skillAttack(Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], int 
         tester.text.push_back(narration);
         std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
         tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
     }
 }
 
-void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     int damage = glad.curAtk - (board[xtarg][ytarg]->curDef / 2);
     if (damage <= 0) { damage = 1; }
@@ -791,9 +816,15 @@ void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int 
 
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        //End sound stuff //
+
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces, tester);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
         }
 
 
@@ -804,12 +835,17 @@ void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int 
         tester.text.push_back(narration);
         std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
         tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
     }
 
 
 }
 
-void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
@@ -829,9 +865,15 @@ void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7],
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         board[xtarg][ytarg]->curDef -= 2;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        //End sound stuff //
+
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces, tester);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
         }
 
 
@@ -843,10 +885,15 @@ void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7],
         tester.text.push_back(narration);
         std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
         tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
     }
 }
 
-void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester , irrklang::ISoundEngine* engine) {
     int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
     if (damage <= 0) { damage = 1; }
     int accuracy = 60 + glad.curAcc - board[xtarg][ytarg]->curEv;
@@ -865,9 +912,15 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
         board[xtarg][ytarg]->curHP -= damage;
         std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
         board[xtarg][ytarg]->curAtk -= 1;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        //End sound stuff //
+
         if (board[xtarg][ytarg]->curHP <= 0) {
             //Die
-            killGladiator(board[xtarg][ytarg], board, pieces, tester);
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
         }
 
 
@@ -879,11 +932,16 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
         tester.text.push_back(narration);
         std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
         tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
     }
 
 }
 
-void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     int heal = 3 + (glad.curSup / 5);
     std::cout << "The gladiator healed for " << heal << " health \n";
@@ -896,9 +954,14 @@ void skillHeal(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xt
     tester.text.push_back(narration);
     std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
     tester.dialogue = dialogue;
+
+    //Sound stuff //
+    //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    //End sound stuff //
 }
 
-void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     int inspire = 1 + (glad.curSup / 10);
     std::cout << "The gladiator inspired for " << inspire << " attack \n";
@@ -909,9 +972,14 @@ void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int
     std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
     tester.dialogue = dialogue;
 
+    //Sound stuff //
+    //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    //End sound stuff //
+
 }
 
-void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     int resolve = 1 + (glad.curSup / 10);
     std::cout << "The gladiator resolved for " << resolve << " defense \n";
@@ -922,9 +990,14 @@ void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int
     std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
     tester.dialogue = dialogue;
 
+    //Sound stuff //
+    //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    //End sound stuff //
+
 }
 
-void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester) {
+void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
 
     //This one isn't increased by support -- that would be too broken
     //It also doesn't increase the current stat -- this is long-term only!
@@ -936,13 +1009,18 @@ void skillTrain(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int x
     std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_SupportUse();
     tester.dialogue = dialogue;
 
+    //Sound stuff //
+    //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    //End sound stuff //
+
 }
 
 //The big one
 //This is the function that is called to make a gladiator actually act
 //act_type is the type of action being performed (true = attack, false = support)
 //This will likely have a lot of bugs at the start! Hopefully they're fixed by the time anyone else sees this!
-void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester) {
+void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7], TestGUI &tester, irrklang::ISoundEngine* engine) {
 
     //Get info about gladiator
     int xpos = glad.xpos;
@@ -1001,13 +1079,13 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         switch (action) {                                               //Maybe to random generation/shop depending
         //OFFENSIVE ACTION: ATTACK
         //A normal attack. Calculates accuracy versus evade, and attack versus defense
-        case Attack: skillAttack(glad, board, pieces, xtarg, ytarg, tester); break;
+        case Attack: skillAttack(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Only takes half of the target's defense into account. -10 accuracy
-        case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg, tester); break;
+        case Pierce: skillPierce(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Reduces the target's defense by 2 for the rest of combat. -10 accuracy
-        case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg, tester); break;
+        case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Reduces the target's attack by 1 for the rest of combat. -10 accuracy
-        case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg, tester); break;
+        case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Uh oh, you forgot to implement something!
         default: std::cout << "This skill hasn't been implemented yet!\n";
         }
@@ -1018,10 +1096,10 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         int random = rand() % 2;
         SupSkill action = (random == 0) ? glad.sup1 : glad.sup2;
         switch (action) {
-        case Heal: skillHeal(glad, board, pieces, xtarg, ytarg, tester);  break;
-        case Inspire: skillInspire(glad, board, pieces, xtarg, ytarg, tester); break;
-        case Resolve: skillResolve(glad, board, pieces, xtarg, ytarg, tester);  break;
-        case Train: skillTrain(glad, board, pieces, xtarg, ytarg, tester);  break;
+        case Heal: skillHeal(glad, board, pieces, xtarg, ytarg, tester, engine);  break;
+        case Inspire: skillInspire(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        case Resolve: skillResolve(glad, board, pieces, xtarg, ytarg, tester, engine);  break;
+        case Train: skillTrain(glad, board, pieces, xtarg, ytarg, tester, engine);  break;
         }
     
     
@@ -1068,6 +1146,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                enemies.clear();
                for (int i = 0; i < 5; i++) {
                    Gladiator newglad = Gladiator(1);
+                   newglad.engine = engine;
                    newglad.firstname = dub(nameList);
                    newglad.lastname = dub(nameList);
                    enemies.push_back(newglad);
@@ -1194,7 +1273,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
                }
                if (act) {
-                   Act(act_type, allies[cur_actor], board, pieces, tester);
+                   Act(act_type, allies[cur_actor], board, pieces, tester, engine);
                }
                step++;
                }
@@ -1238,6 +1317,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    for (int i = 0; i < 5; i++) {
                        if (!allies[i].alive) {
                            Gladiator newglad = Gladiator(0);
+                           newglad.engine = engine;
                            newglad.firstname = dub(nameList);
                            newglad.lastname = dub(nameList);
                            allies[i] = newglad;
@@ -1293,7 +1373,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
                }
                if (act) {
-                   Act(act_type, enemies[cur_actor], board, pieces, tester);
+                   Act(act_type, enemies[cur_actor], board, pieces, tester, engine);
                }
                step = 0;
                 }
@@ -1413,70 +1493,30 @@ void Aftr::GLViewAAAFinalProject::loadMap()
       worldLst->push_back( wo );
    }
 
-   { 
-      ////Create the infinite grass plane (the floor)
-      /*WO* wo = WO::New(grass, Vector(1, 1, 1), MESH_SHADING_TYPE::mstFLAT);
-      wo->setPosition( Vector( 0, 0, 0 ) );
-      wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
-      wo->upon_async_model_loaded( [wo]()
-         {
-            ModelMeshSkin& grassSkin = wo->getModel()->getModelDataShared()->getModelMeshes().at( 0 )->getSkins().at( 0 );
-            grassSkin.getMultiTextureSet().at( 0 ).setTexRepeats( 5.0f );
-            grassSkin.setAmbient( aftrColor4f( 0.4f, 0.4f, 0.4f, 1.0f ) ); //Color of object when it is not in any light
-            grassSkin.setDiffuse( aftrColor4f( 1.0f, 1.0f, 1.0f, 1.0f ) ); //Diffuse color components (ie, matte shading color of this object)
-            grassSkin.setSpecular( aftrColor4f( 0.4f, 0.4f, 0.4f, 1.0f ) ); //Specular color component (ie, how "shiney" it is)
-            grassSkin.setSpecularCoefficient( 10 ); // How "sharp" are the specular highlights (bigger is sharper, 1000 is very sharp, 10 is very dull)
-         } );
-      wo->setLabel( "Grass" );
-      worldLst->push_back( wo );*/
-   }
 
-   //{
-   //   //Create the infinite grass plane that uses the Open Dynamics Engine (ODE)
-   //   WO* wo = WOStatic::New( grass, Vector(1,1,1), MESH_SHADING_TYPE::mstFLAT );
-   //   ((WOStatic*)wo)->setODEPrimType( ODE_PRIM_TYPE::PLANE );
-   //   wo->setPosition( Vector(0,0,0) );
-   //   wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
-   //   wo->getModel()->getModelDataShared()->getModelMeshes().at(0)->getSkins().at(0).getMultiTextureSet().at(0)->setTextureRepeats( 5.0f );
-   //   wo->setLabel( "Grass" );
-   //   worldLst->push_back( wo );
-   //}
-
-   //{
-   //   //Create the infinite grass plane that uses NVIDIAPhysX(the floor)
-   //   WO* wo = WONVStaticPlane::New( grass, Vector( 1, 1, 1 ), MESH_SHADING_TYPE::mstFLAT );
-   //   wo->setPosition( Vector( 0, 0, 0 ) );
-   //   wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
-   //   wo->getModel()->getModelDataShared()->getModelMeshes().at( 0 )->getSkins().at( 0 ).getMultiTextureSet().at( 0 )->setTextureRepeats( 5.0f );
-   //   wo->setLabel( "Grass" );
-   //   worldLst->push_back( wo );
-   //}
    
-   //Make a Dear Im Gui instance via the WOImGui in the engine... This calls
-   //the default Dear ImGui demo that shows all the features... To create your own,
-   //inherit from WOImGui and override WOImGui::drawImGui_for_this_frame(...) (among any others you need).
-   // 
-  
-   // 
-   //WOImGui* gui = WOImGui::New( nullptr );
-   //gui->setLabel( "My Gui" );
-   //gui->subscribe_drawImGuiWidget(
-   //   [this, gui]() //this is a lambda, the capture clause is in [], the input argument list is in (), and the body is in {}
-   //   {
-   //      ImGui::ShowDemoWindow(); //Displays the default ImGui demo from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
-   //      WOImGui::draw_AftrImGui_Demo( gui ); //Displays a small Aftr Demo from C:/repos/aburn/engine/src/aftr/WOImGui.cpp
-   //      ImPlot::ShowDemoWindow(); //Displays the ImPlot demo using ImGui from C:/repos/aburn/engine/src/imgui_implot/implot_demo.cpp
-   //   } );
-   //this->worldLst->push_back( gui );
+   
 
    ////////////////////////////////////////////////////////////////////////////////
    ////////////////////////////     MY STUFF    ///////////////////////////////////
    ////////////////////////////////////////////////////////////////////////////////
+
+   ////////////////////////////////
+   //////// SOUND STUFF ///////////
+   ////////////////////////////////
+
+   engine = irrklang::createIrrKlangDevice();
+   //backgroundSound = engine->play2D("../mm/sounds/crowd.wav", true, false, true);
+
+   //////////////////////////////////
+   ////////// NOT SOUND STUFF ///////
+   //////////////////////////////////
    
    srand(time(NULL));
 
    for (int i = 0; i < 5; i++) {
        Gladiator newglad = Gladiator(0);
+       newglad.engine = engine;
        newglad.firstname = dub(nameList);
        newglad.lastname = dub(nameList);
        allies.push_back(newglad);
@@ -1502,6 +1542,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    tester = TestGUI();//TestGUI(board, p_board, pieces, allies, enemies);
    TestGUI* tester2 = &tester;
    tester2->allies = &allies;
+   tester.engine = engine;
    //std::vector<TestGUI> unmutable;
    //unmutable.push_back(tester);
 
@@ -1577,6 +1618,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
    //enemy gladiator piece and assignment to board
    for (int i = 0; i < 5; i++) {
        Gladiator newglad = Gladiator(1);
+       newglad.engine = engine;
        newglad.firstname = dub(nameList);
        newglad.lastname = dub(nameList);
        enemies.push_back(newglad);
@@ -1604,6 +1646,8 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
 
 
+   
+
    createAAAFinalProjectWayPoints();
 
    
@@ -1612,7 +1656,6 @@ void Aftr::GLViewAAAFinalProject::loadMap()
 
 //TODO list:
 //1. Final boss/more structured enemy teams
-//2. Sounds
 
 //Misc:
 //more skills and personalities

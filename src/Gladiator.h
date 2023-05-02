@@ -1,5 +1,8 @@
 #include <vector>
 #include <string>
+
+#include "../include/irrklang/irrKlang.h"
+
 #pragma once
 //////////////////////////////////////////
 ////////////// ENUMS /////////////////////
@@ -134,7 +137,7 @@ class Gladiator {
 		int xpos;  //The gladiator's x and y positions on the board
 		int ypos;
 
-
+		irrklang::ISoundEngine* engine;
 
 		/////////////////////////////////
 		///////// GUI STUFF /////////////
@@ -150,6 +153,7 @@ class Gladiator {
 		/////////// FUNCTIONS ///////////
 		/////////////////////////////////
 
+		void PlayUpgrade();
 		
 
 		/////////////////////////////////

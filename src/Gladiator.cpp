@@ -177,6 +177,7 @@ void Gladiator::my_ImGui_draw_method() {
 							maxHP++;
 							points--;
 							dialogue = D_IncreaseHP();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -191,6 +192,7 @@ void Gladiator::my_ImGui_draw_method() {
 							baseAtk++;
 							points--;
 							dialogue = D_IncreaseAtk();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -205,6 +207,7 @@ void Gladiator::my_ImGui_draw_method() {
 							baseDef++;
 							points--;
 							dialogue = D_IncreaseDef();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -219,6 +222,7 @@ void Gladiator::my_ImGui_draw_method() {
 							baseAcc++;
 							points--;
 							dialogue = D_IncreaseAcc();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -233,6 +237,7 @@ void Gladiator::my_ImGui_draw_method() {
 							baseEv++;
 							points--;
 							dialogue = D_IncreaseEv();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -247,6 +252,7 @@ void Gladiator::my_ImGui_draw_method() {
 							baseSup++;
 							points--;
 							dialogue = D_IncreaseSup();
+							PlayUpgrade();
 						}
 						else {
 							dialogue = D_IncreaseFail();
@@ -269,7 +275,9 @@ void Gladiator::my_ImGui_draw_method() {
 		ImGui::Separator(); //draws bottom separator
 }
 
-
+void Gladiator::PlayUpgrade() {
+	irrklang::ISound* s = engine->play2D("../mm/sounds/Upgrade.wav");
+}
 
 //////////////////////////////////////
 //////// DIALOGUE FUNCS //////////////

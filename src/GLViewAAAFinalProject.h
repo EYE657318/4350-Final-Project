@@ -4,6 +4,8 @@
 #include "Gladiator.h"
 #include "TestGUI.h"
 
+#include "../include/irrklang/irrKlang.h"
+
 namespace Aftr
 {
    class Camera;
@@ -34,6 +36,12 @@ public:
    virtual void onMouseMove( const SDL_MouseMotionEvent& e );
    virtual void onKeyDown( const SDL_KeyboardEvent& key );
    virtual void onKeyUp( const SDL_KeyboardEvent& key );
+
+   //////////////////////
+   //// Sound Stuff /////
+   //////////////////////
+   irrklang::ISoundEngine* engine;
+   irrklang::ISound* backgroundSound;
 
    ///////////////////////
    ////Gladiator Stuff////

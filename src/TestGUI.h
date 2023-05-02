@@ -5,6 +5,7 @@
 #include "WOImGuiAbstract.h"
 #include "Gladiator.h"
 #include "WO.h"
+#include "../include/irrklang/irrKlang.h"
 
 
 
@@ -46,6 +47,10 @@
 
 		//The player must click on this to allow combat to start
 		bool ready_to_go = false;
+
+		//Sound Stuff
+		void PlayPurchase();
+		irrklang::ISoundEngine* engine;
 
 	protected:
 		/*Gladiator* board[7][7];

@@ -104,6 +104,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].off2 = Pierce;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -111,12 +112,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].off2 = Pierce;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].off2 = Pierce;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -124,12 +127,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].off2 = Pierce;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Pierce for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].off2 = Pierce;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 
@@ -147,6 +152,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].off2 = Bonebreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -154,12 +160,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].off2 = Bonebreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].off2 = Bonebreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -167,12 +175,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].off2 = Bonebreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Bonebreaker for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].off2 = Bonebreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 					
@@ -188,8 +198,10 @@
 
 					if (gold >= cost) {
 						if (ImGui::Button(name.c_str())) {
-							(*allies)[0].off2 = Swordbreaker;
+							(*allies)[0].
+							off2 = Swordbreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -197,12 +209,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].off2 = Swordbreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].off2 = Swordbreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -210,12 +224,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].off2 = Swordbreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Swordbreaker for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].off2 = Swordbreaker;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -232,6 +248,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].sup2 = Heal;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -239,12 +256,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].sup2 = Heal;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].sup2 = Heal;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -252,12 +271,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].sup2 = Heal;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Heal for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].sup2 = Heal;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -275,6 +296,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].sup2 = Train;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -282,12 +304,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].sup2 = Train;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].sup2 = Train;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -295,12 +319,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].sup2 = Train;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Train for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].sup2 = Train;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -318,6 +344,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].baseAtk += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -325,12 +352,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].baseAtk += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].baseAtk += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -338,12 +367,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].baseAtk += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Attack for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].baseAtk += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -361,6 +392,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].baseDef += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -368,12 +400,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].baseDef += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].baseDef += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -381,12 +415,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].baseDef += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Defense for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].baseDef += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -404,6 +440,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].baseAcc += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -411,12 +448,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].baseAcc += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].baseAcc += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -424,12 +463,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].baseAcc += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Accuracy for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].baseAcc += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -447,6 +488,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].baseEv += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -454,12 +496,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].baseEv += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].baseEv += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -467,12 +511,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].baseEv += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Evade for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].baseEv += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -490,6 +536,7 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[0].baseSup += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[1];
@@ -497,12 +544,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[1].baseSup += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[2];
 						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[2].baseSup += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						ImGui::SameLine();
 						glad = (*allies)[3];
@@ -510,12 +559,14 @@
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[3].baseSup += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 						glad = (*allies)[4];
 						name = "Buy Support for " + glad.firstname + " " + glad.lastname;
 						if (ImGui::Button(name.c_str())) {
 							(*allies)[4].baseSup += 2;
 							gold -= cost;
+							PlayPurchase();
 						}
 					}
 				}
@@ -531,6 +582,10 @@
 		ImGui::Separator();
 	}
 
+
+	void TestGUI::PlayPurchase() {
+		irrklang::ISound* s = engine->play2D("../mm/sounds/Coins.wav");
+	}
 
 	/*ImGui::Text("$ Price: %d gold", cost);
 
