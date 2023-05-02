@@ -166,77 +166,91 @@ void Gladiator::my_ImGui_draw_method() {
 
 				ImGui::Text("Active: %d, Alive: %d", active, alive);
 
-				ImGui::Text("Upgrade points: %d", points);
+				if (upgrade_enabled) {
+					ImGui::Text("Upgrade points: %d", points);
+				}
 
 				ImGui::Text("Hit Points: %d / %d", curHP, maxHP);
-				if (ImGui::Button("Increase HP")) {
-					if (points > 0) {
-						maxHP++;
-						points--;
-						dialogue = D_IncreaseHP();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase HP")) {
+						if (points > 0) {
+							maxHP++;
+							points--;
+							dialogue = D_IncreaseHP();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 
 				ImGui::Text("Attack: %d / %d", curAtk, baseAtk);
-				if (ImGui::Button("Increase Atk")) {
-					if (points > 0) {
-						baseAtk++;
-						points--;
-						dialogue = D_IncreaseAtk();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase Atk")) {
+						if (points > 0) {
+							baseAtk++;
+							points--;
+							dialogue = D_IncreaseAtk();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 
 				ImGui::Text("Defense: %d / %d", curDef, baseDef);
-				if (ImGui::Button("Increase Def")) {
-					if (points > 0) {
-						baseDef++;
-						points--;
-						dialogue = D_IncreaseDef();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase Def")) {
+						if (points > 0) {
+							baseDef++;
+							points--;
+							dialogue = D_IncreaseDef();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 
 				ImGui::Text("Accuracy: %d / %d", curAcc, baseAcc);
-				if (ImGui::Button("Increase Acc")) {
-					if (points > 0) {
-						baseAcc++;
-						points--;
-						dialogue = D_IncreaseAcc();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase Acc")) {
+						if (points > 0) {
+							baseAcc++;
+							points--;
+							dialogue = D_IncreaseAcc();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 
 				ImGui::Text("Evade: %d / %d", curEv, baseEv);
-				if (ImGui::Button("Increase Ev")) {
-					if (points > 0) {
-						baseEv++;
-						points--;
-						dialogue = D_IncreaseEv();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase Ev")) {
+						if (points > 0) {
+							baseEv++;
+							points--;
+							dialogue = D_IncreaseEv();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 
 				ImGui::Text("Support: %d / %d", curSup, baseSup);
-				if (ImGui::Button("Increase Sup")) {
-					if (points > 0) {
-						baseSup++;
-						points--;
-						dialogue = D_IncreaseSup();
-					}
-					else {
-						dialogue = D_IncreaseFail();
+				if (upgrade_enabled) {
+					if (ImGui::Button("Increase Sup")) {
+						if (points > 0) {
+							baseSup++;
+							points--;
+							dialogue = D_IncreaseSup();
+						}
+						else {
+							dialogue = D_IncreaseFail();
+						}
 					}
 				}
 

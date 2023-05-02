@@ -1043,18 +1043,69 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
            phase = 1;
            cur_actor = -1; //so that unselecting the enemy skin doesn't break things
            std::cout << "Phase: end downtime\n";
+
+           //
+           //DO SETUP FOR COMBAT
+           //
+
+           combats++;
+
+           //reset board
+           for (int i = 0; i < 7; i++) {
+               for (int j = 0; j < 7; j++) {
+                   board[i][j] = NULL;
+               }
+           }
+
+           //enemy gladiator piece and assignment to board
+           enemies.clear();
+           for (int i = 0; i < 5; i++) {
+               Gladiator newglad = Gladiator(1);
+               newglad.firstname = dub(nameList);
+               newglad.lastname = dub(nameList);
+               enemies.push_back(newglad);
+               //TODO: update portrait cubes
+           }
+           for (int i = 0; i < 5; i++) {
+               board[6][6 - i] = &enemies[i];
+               enemies[i].xpos = 6;
+               enemies[i].ypos = 6 - i;
+               auto vec = p_board[6][6 - i]->getPosition();
+               float x = vec[0]; float y = vec[1];
+               enemy_pieces[i]->setPosition(x, y, 4);
+               pieces[6][6 - i] = enemy_pieces[i];
+           }
+
+           for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
+               board[0][i] = &allies[i];
+               allies[i].xpos = 0;
+               allies[i].ypos = i;
+               auto vec = p_board[0][i]->getPosition();
+               float x = vec[0]; float y = vec[1];
+               ally_pieces[i]->setPosition(x, y, 4);
+               pieces[0][i] = ally_pieces[i];
+           }
+
+           //set currents to bases
+           for (int i = 0; i < 5; i++) {
+               allies[i].curHP = allies[i].maxHP;
+               enemies[i].curHP = enemies[i].maxHP;
+               allies[i].curAtk = allies[i].baseAtk;
+               enemies[i].curAtk = enemies[i].baseAtk;
+               allies[i].curDef = allies[i].baseDef;
+               enemies[i].curDef = enemies[i].baseDef;
+               allies[i].curAcc = allies[i].baseAcc;
+               enemies[i].curAcc = enemies[i].baseAcc;
+               allies[i].curEv = allies[i].baseEv;
+               enemies[i].curEv = enemies[i].baseEv;
+               allies[i].curSup = allies[i].baseSup;
+               enemies[i].curSup = enemies[i].baseSup;
+           }
+
+           tester.combatEnabled = true;
+           tester.shop_enabled = false;
            
-           //Create a new set of enemies
-           //enemies.clear();
-           //for (int i = 0; i < 5; i++) {
-           //    Gladiator newglad = Gladiator(1);
-           //    newglad.firstname = dub(nameList);
-           //    newglad.lastname = dub(nameList);
-           //    enemies.push_back(newglad);
-           //}
            
-           //TODO: all of this
-           //probably make a new function
 
 
 
@@ -1157,7 +1208,21 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                }
                else {
                    std::cout << "All enemies dead, none to move!\n";
-                   //TODO: end battle
+                   
+                   //TODO: END COMBAT
+                   phase = 0;
+                   step = 0;
+                   for (int i = 0; i < 5; i++) {
+                       if (!allies[i].alive) {
+                           Gladiator newglad = 0;
+                           allies[i] = newglad;
+                           //TODO: update portrait cube
+                        }
+                       allies[i].points += 5;
+                   }
+                   tester.gold += 50;
+                   tester.shop_enabled = true;
+                   tester.combatEnabled = false;
                }
                 }
                break;
@@ -1480,7 +1545,7 @@ void Aftr::GLViewAAAFinalProject::loadMap()
        allies[i].ypos = i;
    }
 
-   for (int i = 0; i < 5; i++) {
+   for (int i = 0; i < 5; i++) {          //Portrait cubes
        WO* wo = WO::New(shinyRedPlasticCube, Vector(0.3, 0.3, 0.3), MESH_SHADING_TYPE::mstFLAT);
        WO* wo2 = WO::New(shinyRedPlasticCube, Vector(0.3, 0.3, 0.3), MESH_SHADING_TYPE::mstFLAT);
        a_portraits[i] = wo;
