@@ -1165,7 +1165,12 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    }
                    else {
                        std::cout << "All allies dead, none to move!\n";
-                       //TODO: end game
+                       //skyBoxImageNames.push_back("../mm/images/skins/Defeat.png");
+                       WO* wo = WOSkyBox::New("../mm/images/skins/Defeat.png", this->getCameraPtrPtr());
+                       wo->setPosition(Vector(0, 0, 0));
+                       wo->setLabel("Sky Box");
+                       wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
+                       worldLst->push_back(wo);
                    }
                }
                break;
@@ -1253,6 +1258,16 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    tester.gold += 50;
                    tester.shop_enabled = true;
                    tester.combatEnabled = false;
+
+                   if (combats == 10) {
+                       phase = 2;     //just make these unusable
+                       step = 6;
+                       WO* wo = WOSkyBox::New("../mm/images/skins/Victory.png", this->getCameraPtrPtr());
+                       wo->setPosition(Vector(0, 0, 0));
+                       wo->setLabel("Sky Box");
+                       wo->renderOrderType = RENDER_ORDER_TYPE::roOPAQUE;
+                       worldLst->push_back(wo);
+                   }
                }
                 }
                break;
@@ -1284,8 +1299,8 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                break;
            default: 
                 {/*This should not happen*/
-               std::cout << "This should not happen\n";
-               step = 0;
+               std::cout << "You win!\n";
+               //step = 0;
                 }
            }
 
