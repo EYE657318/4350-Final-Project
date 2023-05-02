@@ -819,7 +819,7 @@ void skillPierce(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int 
 
         //Sound stuff //
         //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
-        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Stab.wav");
         //End sound stuff //
 
         if (board[xtarg][ytarg]->curHP <= 0) {
@@ -868,7 +868,7 @@ void skillBonebreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7],
 
         //Sound stuff //
         //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
-        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Bonebreak.wav");
         //End sound stuff //
 
         if (board[xtarg][ytarg]->curHP <= 0) {
@@ -915,7 +915,7 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
 
         //Sound stuff //
         //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
-        irrklang::ISound* s = engine->play2D("../mm/sounds/Slash1.ogg");
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Swordbreak.wav");
         //End sound stuff //
 
         if (board[xtarg][ytarg]->curHP <= 0) {
@@ -929,6 +929,252 @@ void skillSwordbreaker(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7]
     else {
         std::cout << "The gladiator missed!\n";
         std::string narration = glad.firstname + " " + glad.lastname + " missed their swordbreaker!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
+    }
+
+}
+
+//Enemy-only. dramatically reduces opponent's attack
+void skillMaulAttack(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 80 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator swordmauled for " << damage << " damage!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " attack mauled " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curAtk -= 5;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Growl.wav");
+        //End sound stuff //
+
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their attack maul!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
+    }
+
+}
+
+void skillMaulDefense(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 80 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator mauldeffed for " << damage << " damage!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " defense mauled " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curDef -= 5;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Growl.wav");
+        //End sound stuff //
+
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their maul defense!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
+    }
+
+}
+
+void skillAccuracyMaul(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 80 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator maulacc for " << damage << " damage!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " accuracy mauled " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curAcc -= 5;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Growl.wav");
+        //End sound stuff //
+
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their accuracy maul!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
+    }
+
+}
+
+void skillMaulEvade(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 80 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator evademaul for " << damage << " damage!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " evade mauled " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curEv -= 5;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Growl.wav");
+        //End sound stuff //
+
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their evade maul!";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
+        tester.dialogue = dialogue;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Miss.wav");
+        //End sound stuff //
+    }
+
+}
+
+//Enemy only. reduces all of target's stats by 3, +10 accuracy, +5 damage
+void skillDeificBlast(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int xtarg, int ytarg, TestGUI& tester, irrklang::ISoundEngine* engine) {
+    int damage = glad.curAtk - board[xtarg][ytarg]->curDef + 5;
+    if (damage <= 0) { damage = 1; }
+    int accuracy = 80 + glad.curAcc - board[xtarg][ytarg]->curEv;
+    if (accuracy < 20) { accuracy = 20; }
+    int accroll = rand() % 100;
+    bool hit = true;
+    if (accroll > accuracy) { hit = false; }
+    if (hit) {
+        std::cout << "The gladiator blasted for " << damage << " damage!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " Deific Blasted " + board[xtarg][ytarg]->firstname +
+            " " + board[xtarg][ytarg]->lastname + " for " + std::to_string(damage) + " damage.";
+        tester.text.push_back(narration);
+        std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackHit();
+        tester.dialogue = dialogue;
+
+        board[xtarg][ytarg]->curHP -= damage;
+        std::cout << "The target now has " << board[xtarg][ytarg]->curHP << " HP left!\n";
+        board[xtarg][ytarg]->curEv -= 3;
+        board[xtarg][ytarg]->curAcc -= 3;
+        board[xtarg][ytarg]->curAtk -= 3;
+        board[xtarg][ytarg]->curDef -= 3;
+        board[xtarg][ytarg]->curSup -= 3;
+
+        //Sound stuff //
+        //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
+        irrklang::ISound* s = engine->play2D("../mm/sounds/Super.wav");
+        //End sound stuff //
+
+        if (board[xtarg][ytarg]->curHP <= 0) {
+            //Die
+            killGladiator(board[xtarg][ytarg], board, pieces, tester, engine);
+        }
+
+
+
+    }
+    else {
+        std::cout << "The gladiator missed!\n";
+        std::string narration = glad.firstname + " " + glad.lastname + " missed their Deific Blast!";
         tester.text.push_back(narration);
         std::string dialogue = glad.firstname + " " + glad.lastname + " says: " + glad.D_AttackMiss();
         tester.dialogue = dialogue;
@@ -974,7 +1220,7 @@ void skillInspire(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int
 
     //Sound stuff //
     //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
-    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    irrklang::ISound* s = engine->play2D("../mm/sounds/String.wav");
     //End sound stuff //
 
 }
@@ -992,7 +1238,7 @@ void skillResolve(Gladiator& glad, Gladiator* board[7][7], WO* pieces[7][7], int
 
     //Sound stuff //
     //Decided against 3D; would probably just be weird. I'd like to hear the entire board the same
-    irrklang::ISound* s = engine->play2D("../mm/sounds/Sparkle.wav");
+    irrklang::ISound* s = engine->play2D("../mm/sounds/Defense.wav");
     //End sound stuff //
 
 }
@@ -1086,6 +1332,16 @@ void Act(bool act_type, Gladiator &glad, Gladiator* board[7][7], WO* pieces[7][7
         case Bonebreaker: skillBonebreaker(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Reduces the target's attack by 1 for the rest of combat. -10 accuracy
         case Swordbreaker: skillSwordbreaker(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        //ENEMY ONLY. reduces the target's attack by 5 for the rest of combat. +10 accuracy
+        case AttackMaul: skillMaulAttack(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        //ENEMY ONLY. reduces the target's defense by 5 for the rest of combat. +10 accuracy
+        case DefenseMaul: skillMaulDefense(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        //ENEMY ONLY. reduces the target's accuracy by 5 for the rest of combat. +10 accuracy
+        case AccuracyMaul: skillAccuracyMaul(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        //ENEMY ONLY. reduces the target's evade by 5 for the rest of combat. +10 accuracy
+        case EvadeMaul: skillMaulEvade(glad, board, pieces, xtarg, ytarg, tester, engine); break;
+        //ENEMY ONLY. reduces all target's stats by 3. +10 accuracy, +5 damage.
+        case DeificBlast: skillDeificBlast(glad, board, pieces, xtarg, ytarg, tester, engine); break;
         //Uh oh, you forgot to implement something!
         default: std::cout << "This skill hasn't been implemented yet!\n";
         }
@@ -1130,8 +1386,8 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                //
 
                tester.items.clear();
-               for (int i = 0; i < 5; i++) {
-                   tester.items.push_back(rand() % 11);
+               for (int i = 0; i < 6; i++) {         //Collision is possible. this is fine!
+                   tester.items.push_back(rand() % 14);
                }
                combats++;
 
@@ -1155,10 +1411,20 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
                    }
                    enemies[0].firstname = "Lupin"; enemies[0].lastname = "Rubrum"; enemies[0].portrait = "../mm/images/portraits/LupinRed.png";
+                   enemies[0].baseAtk += 10; enemies[0].baseDef += 10; enemies[0].baseAcc += 10; enemies[0].baseEv += 10; enemies[0].curHP += 10;
+                   enemies[0].off1 = AttackMaul; enemies[0].off2 = AttackMaul; enemies[0].sup1 = Inspire; enemies[0].sup2 = Inspire;
                    enemies[1].firstname = "Lupin"; enemies[1].lastname = "Caeruleum"; enemies[1].portrait = "../mm/images/portraits/LupinBlue.png";
+                   enemies[1].baseAtk += 10; enemies[1].baseDef += 10; enemies[1].baseAcc += 10; enemies[1].baseEv += 10; enemies[1].curHP += 10;
+                   enemies[1].off1 = DefenseMaul; enemies[1].off2 = DefenseMaul; enemies[1].sup1 = Inspire; enemies[1].sup2 = Inspire;
                    enemies[2].firstname = "God-Emperor"; enemies[2].lastname = "Augustus"; enemies[2].portrait = "../mm/images/portraits/Augustus.png";
+                   enemies[2].baseAtk += 13; enemies[2].baseDef += 15; enemies[2].baseAcc += 20; enemies[2].baseEv += 10; enemies[2].curHP += 25;
+                   enemies[2].off1 = DeificBlast; enemies[2].off2 = DeificBlast; enemies[2].sup1 = Inspire; enemies[2].sup2 = Inspire;
                    enemies[3].firstname = "Lupin"; enemies[3].lastname = "Viridis"; enemies[3].portrait = "../mm/images/portraits/LupinYellow.png";
+                   enemies[3].baseAtk += 10; enemies[3].baseDef += 10; enemies[3].baseAcc += 10; enemies[3].baseEv += 10; enemies[3].curHP += 10;
+                   enemies[3].off1 = AccuracyMaul; enemies[3].off2 = AccuracyMaul; enemies[3].sup1 = Inspire; enemies[3].sup2 = Inspire;
                    enemies[4].firstname = "Lupin"; enemies[4].lastname = "Flavum"; enemies[4].portrait = "../mm/images/portraits/LupinGreen.png";
+                   enemies[4].baseAtk += 10; enemies[4].baseDef += 10; enemies[4].baseAcc += 10; enemies[4].baseEv += 10; enemies[4].curHP += 10;
+                   enemies[4].off1 = EvadeMaul; enemies[4].off2 = EvadeMaul; enemies[4].sup1 = Inspire; enemies[4].sup2 = Inspire;
                    for (int i = 0; i < 5; i++) {
                        WO* wo = e_portraits[i];
                        std::optional<Aftr::Tex> the_skin = ManagerTex::loadTexAsync_unregistered(enemies[i].portrait);

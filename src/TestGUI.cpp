@@ -571,6 +571,150 @@
 					}
 				}
 
+				if (std::find(items.begin(), items.end(), 11) != items.end()) {
+					int cost = 12 + (gold / 10);
+					ImGui::Text("***AI Change: Offensive***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Offensive AI for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].ai = Offense;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Offensive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].ai = Offense;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[2];
+						name = "Buy Offensive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].ai = Offense;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Offensive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].ai = Offense;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[4];
+						name = "Buy OffensiveAI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].ai = Offense;
+							gold -= cost;
+							PlayPurchase();
+						}
+					}
+				}
+
+				if (std::find(items.begin(), items.end(), 12) != items.end()) {
+					int cost = 12 + (gold / 10);
+					ImGui::Text("***AI Change: Supportive***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Supportive AI for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].ai = Support;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Supportive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].ai = Support;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[2];
+						name = "Buy Supportive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].ai = Support;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Supportive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].ai = Support;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[4];
+						name = "Buy Supportive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].ai = Support;
+							gold -= cost;
+							PlayPurchase();
+						}
+					}
+				}
+
+				if (std::find(items.begin(), items.end(), 13) != items.end()) {
+					int cost = 12 + (gold / 10);
+					ImGui::Text("***AI Change: Indecisive***");
+
+					ImGui::Text("$ Price: %d gold", cost);
+
+					Gladiator glad = (*allies)[0];
+					std::string name = "Buy Indecisive AI for " + glad.firstname + " " + glad.lastname;
+
+					if (gold >= cost) {
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[0].ai = Indecisive;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[1];
+						name = "Buy Indecisive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[1].ai = Indecisive;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[2];
+						name = "Buy Indecisive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[2].ai = Indecisive;
+							gold -= cost;
+							PlayPurchase();
+						}
+						ImGui::SameLine();
+						glad = (*allies)[3];
+						name = "Buy Indecisive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[3].ai = Indecisive;
+							gold -= cost;
+							PlayPurchase();
+						}
+						glad = (*allies)[4];
+						name = "Buy Indecisive AI for " + glad.firstname + " " + glad.lastname;
+						if (ImGui::Button(name.c_str())) {
+							(*allies)[4].ai = Indecisive;
+							gold -= cost;
+							PlayPurchase();
+						}
+					}
+				}
+
 			}
 			else {
 				ImGui::Text("Shop not currently enabled.");

@@ -16,6 +16,12 @@ enum OffSkill{                                      //maybe random generation/sh
 	Bonebreaker,     //An attack that (temporarily) reduces the target's defense
 	Swordbreaker,    //An attack that (temporarily) reduces the target's attack
 	//Sweep,         //Attacks enemies adjacent to the target
+	//// ENEMY ONLY: ////
+	AttackMaul,      //Reduces target's attack by a lot
+	DefenseMaul,     //Reduces target's defense by a lot
+	AccuracyMaul,    //Reduces target's accuracy by a lot
+	EvadeMaul,       //Reduces target's evade by a lot
+	DeificBlast,     //Reduces all of target's stats by 3. +5 damage.
 };
 
 //Enum: Support skills the gladiators can have
