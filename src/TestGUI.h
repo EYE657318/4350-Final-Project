@@ -18,7 +18,7 @@
 		TestGUI();
 		bool to_move = false;
 		bool next = false;
-		bool combatEnabled = true;
+		bool combatEnabled = false;
 
 		//narration is commentary on what has just happened
 		//dialogue is what the ally gladiator has to say about it
@@ -36,13 +36,16 @@
 		//Each item the shop can have has an id; this is a list of the ids available right now;
 		std::vector<int> items = {1, 2, 3, 4};
 		//If the shope is currently enabled
-		bool shop_enabled = true;
+		bool shop_enabled = false;
 
 		//The allies who can be edited by the shop
 		std::vector<Gladiator>* allies;
 
 		//gold!
-		int gold = 2000;
+		int gold = 20;
+
+		//The player must click on this to allow combat to start
+		bool ready_to_go = false;
 
 	protected:
 		/*Gladiator* board[7][7];

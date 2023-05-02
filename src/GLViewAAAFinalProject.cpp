@@ -1037,73 +1037,79 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
    if (key.keysym.sym == SDLK_SPACE) {
 
-       if (phase == 0) {
-           //We are in downtime. Switch to combat
-           step = 0;
-           phase = 1;
-           cur_actor = -1; //so that unselecting the enemy skin doesn't break things
-           std::cout << "Phase: end downtime\n";
+       if (phase == 0 ) {
+           if (tester.ready_to_go) {
+               tester.ready_to_go = false;
+               //We are in downtime. Switch to combat
+               step = 0;
+               phase = 1;
+               cur_actor = -1; //so that unselecting the enemy skin doesn't break things
+               std::cout << "Phase: end downtime\n";
 
-           //
-           //DO SETUP FOR COMBAT
-           //
+               //
+               //DO SETUP FOR COMBAT
+               //
 
-           combats++;
+               //TODO: re-randomize shop
 
-           //reset board
-           for (int i = 0; i < 7; i++) {
-               for (int j = 0; j < 7; j++) {
-                   board[i][j] = NULL;
+               combats++;
+
+               //reset board
+               for (int i = 0; i < 7; i++) {
+                   for (int j = 0; j < 7; j++) {
+                       board[i][j] = NULL;
+                   }
                }
-           }
 
-           //enemy gladiator piece and assignment to board
-           enemies.clear();
-           for (int i = 0; i < 5; i++) {
-               Gladiator newglad = Gladiator(1);
-               newglad.firstname = dub(nameList);
-               newglad.lastname = dub(nameList);
-               enemies.push_back(newglad);
-               //TODO: update portrait cubes
-           }
-           for (int i = 0; i < 5; i++) {
-               board[6][6 - i] = &enemies[i];
-               enemies[i].xpos = 6;
-               enemies[i].ypos = 6 - i;
-               auto vec = p_board[6][6 - i]->getPosition();
-               float x = vec[0]; float y = vec[1];
-               enemy_pieces[i]->setPosition(x, y, 4);
-               pieces[6][6 - i] = enemy_pieces[i];
-           }
+               //enemy gladiator piece and assignment to board
+               enemies.clear();
+               for (int i = 0; i < 5; i++) {
+                   Gladiator newglad = Gladiator(1);
+                   newglad.firstname = dub(nameList);
+                   newglad.lastname = dub(nameList);
+                   enemies.push_back(newglad);
+                   //TODO: update portrait cubes
+               }
+               for (int i = 0; i < 5; i++) {
+                   board[6][6 - i] = &enemies[i];
+                   enemies[i].xpos = 6;
+                   enemies[i].ypos = 6 - i;
+                   auto vec = p_board[6][6 - i]->getPosition();
+                   float x = vec[0]; float y = vec[1];
+                   enemy_pieces[i]->setPosition(x, y, 4);
+                   pieces[6][6 - i] = enemy_pieces[i];
+               }
 
-           for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
-               board[0][i] = &allies[i];
-               allies[i].xpos = 0;
-               allies[i].ypos = i;
-               auto vec = p_board[0][i]->getPosition();
-               float x = vec[0]; float y = vec[1];
-               ally_pieces[i]->setPosition(x, y, 4);
-               pieces[0][i] = ally_pieces[i];
-           }
+               for (int i = 0; i < 5; i++) {     //Assign the allies to their places on the board
+                   board[0][i] = &allies[i];
+                   allies[i].xpos = 0;
+                   allies[i].ypos = i;
+                   auto vec = p_board[0][i]->getPosition();
+                   float x = vec[0]; float y = vec[1];
+                   ally_pieces[i]->setPosition(x, y, 4);
+                   pieces[0][i] = ally_pieces[i];
+                   allies[i].upgrade_enabled = false;
+               }
 
-           //set currents to bases
-           for (int i = 0; i < 5; i++) {
-               allies[i].curHP = allies[i].maxHP;
-               enemies[i].curHP = enemies[i].maxHP;
-               allies[i].curAtk = allies[i].baseAtk;
-               enemies[i].curAtk = enemies[i].baseAtk;
-               allies[i].curDef = allies[i].baseDef;
-               enemies[i].curDef = enemies[i].baseDef;
-               allies[i].curAcc = allies[i].baseAcc;
-               enemies[i].curAcc = enemies[i].baseAcc;
-               allies[i].curEv = allies[i].baseEv;
-               enemies[i].curEv = enemies[i].baseEv;
-               allies[i].curSup = allies[i].baseSup;
-               enemies[i].curSup = enemies[i].baseSup;
-           }
+               //set currents to bases
+               for (int i = 0; i < 5; i++) {
+                   allies[i].curHP = allies[i].maxHP;
+                   enemies[i].curHP = enemies[i].maxHP;
+                   allies[i].curAtk = allies[i].baseAtk;
+                   enemies[i].curAtk = enemies[i].baseAtk;
+                   allies[i].curDef = allies[i].baseDef;
+                   enemies[i].curDef = enemies[i].baseDef;
+                   allies[i].curAcc = allies[i].baseAcc;
+                   enemies[i].curAcc = enemies[i].baseAcc;
+                   allies[i].curEv = allies[i].baseEv;
+                   enemies[i].curEv = enemies[i].baseEv;
+                   allies[i].curSup = allies[i].baseSup;
+                   enemies[i].curSup = enemies[i].baseSup;
+               }
 
-           tester.combatEnabled = true;
-           tester.shop_enabled = false;
+               tester.combatEnabled = true;
+               tester.shop_enabled = false;
+           }
            
            
 
@@ -1136,7 +1142,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                            std::cout << "Ally at (" << allies[cur_actor].xpos << ", " << allies[cur_actor].ypos <<
                                ") can't move to (" << move[0] << ", " << move[1] << ").\n";
                            std::string narration = allies[cur_actor].firstname + " " + allies[cur_actor].lastname +
-                               "tried to move to space (" + std::to_string(move[0]) + ", " +
+                               " tried to move to space (" + std::to_string(move[0]) + ", " +
                                std::to_string(move[1]) + "), but it was occupied!";
                            tester.text.push_back(narration);
                            std::string dialogue = allies[cur_actor].firstname + " " + allies[cur_actor].lastname + 
@@ -1197,7 +1203,7 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                        std::cout << "Enemy at (" << enemies[cur_actor].xpos << ", " << enemies[cur_actor].ypos <<
                            ") can't move to (" << move[0] << ", " << move[1] << ").\n";
                        std::string narration = enemies[cur_actor].firstname + " " + enemies[cur_actor].lastname +
-                           "tried to move to space (" + std::to_string(move[0]) + ", " +
+                           " tried to move to space (" + std::to_string(move[0]) + ", " +
                            std::to_string(move[1]) + "), but it was occupied!";
                        tester.text.push_back(narration);
                        std::string dialogue = enemies[cur_actor].firstname + " " + enemies[cur_actor].lastname +
@@ -1214,11 +1220,14 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
                    step = 0;
                    for (int i = 0; i < 5; i++) {
                        if (!allies[i].alive) {
-                           Gladiator newglad = 0;
+                           Gladiator newglad = Gladiator(0);
+                           newglad.firstname = dub(nameList);
+                           newglad.lastname = dub(nameList);
                            allies[i] = newglad;
                            //TODO: update portrait cube
                         }
                        allies[i].points += 5;
+                       allies[i].upgrade_enabled = true;
                    }
                    tester.gold += 50;
                    tester.shop_enabled = true;
@@ -1262,13 +1271,15 @@ void GLViewAAAFinalProject::onKeyDown( const SDL_KeyboardEvent& key )
 
        }
       
-        //Make sure the portrait cubes are still properly attached
-       for (int i = 0; i < 5; i++) {
-           auto vec1 = ally_pieces[i]->getPosition();
-           auto vec2 = enemy_pieces[i]->getPosition();
-           a_portraits[i]->setPosition(vec1[0], vec1[1], vec1[2] + 1.5);
-           e_portraits[i]->setPosition(vec2[0], vec2[1], vec2[2] + 1.5);
-       }
+       //if (tester.ready_to_go) {
+           //Make sure the portrait cubes are still properly attached
+           for (int i = 0; i < 5; i++) {
+               auto vec1 = ally_pieces[i]->getPosition();
+               auto vec2 = enemy_pieces[i]->getPosition();
+               a_portraits[i]->setPosition(vec1[0], vec1[1], vec1[2] + 1.5);
+               e_portraits[i]->setPosition(vec2[0], vec2[1], vec2[2] + 1.5);
+           }
+       //}
 
        //Spacebar is the "do next thing" button.
        //We will keep track of what "phase" (combat/downtime) we are on and what "step" (movement/action) we are on

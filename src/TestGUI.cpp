@@ -64,11 +64,13 @@
 
 			} else {
 				ImGui::Text("Combat GUI not enabled right now!");
-				//if (ImGui::Button("Start Combat")) {
-				//	combatEnabled = true;
+				ImGui::Text("To prevent you accidentally skipping past this phase, \nyou must press the button below to continue");
+				ImGui::Text("Then, you may press spacebar to start combat!");
+				if (ImGui::Button("Start Combat")) {
+					ready_to_go = true;
 					//GLViewAAAFinalProject* glv = ManagerGLView::getGLViewT<GLViewAssignment6Networking>();
 					//glv->changeCube(this->posX, this->posY, this->posZ, this->locX, this->locY, this->locZ, this->skin)
-				//}
+				}
 			}
 
 
@@ -521,6 +523,7 @@
 			}
 			else {
 				ImGui::Text("Shop not currently enabled.");
+
 			}
 
 			ImGui::TreePop();
