@@ -96,6 +96,7 @@
 					int cost = 10 + (gold/5);
 					
 					ImGui::Text("***Offensive Skill: Pierce***");
+					ImGui::Text("Ignores some of the target's defense");
 					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
@@ -144,6 +145,7 @@
 				if (std::find(items.begin(), items.end(), 2) != items.end()) {
 					int cost = 10 + (gold / 5);
 					ImGui::Text("***Offensive Skill: Bonebreaker***");
+					ImGui::Text("Lowers the target's defense.");
 					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
@@ -192,6 +194,7 @@
 				if (std::find(items.begin(), items.end(), 3) != items.end()) {
 					int cost = 10 + (gold / 5);
 					ImGui::Text("***Offensive Skill: Swordbreaker***");
+					ImGui::Text("Lowers the target's attack.");
 					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
@@ -240,6 +243,7 @@
 				if (std::find(items.begin(), items.end(), 4) != items.end()) {
 					int cost = 10 + (gold / 4);
 					ImGui::Text("***Support Skill: Heal***");
+					ImGui::Text("Heals the target.");
 					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
@@ -287,7 +291,7 @@
 				if (std::find(items.begin(), items.end(), 5) != items.end()) {
 					int cost = 20 + (gold / 3);
 					ImGui::Text("***Support Skill: Train***");
-
+					ImGui::Text("Permanently raises the target's attack.");
 					ImGui::Text("$ Price: %d gold", cost);
 
 					Gladiator glad = (*allies)[0];
